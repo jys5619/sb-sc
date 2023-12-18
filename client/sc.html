@@ -1,0 +1,439 @@
+<html>
+  <head>
+    <title>조회</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script type="text/javascript" src="./js/angular.min.js"></script>
+    <script type="text/javascript" src="./js/controllers.js"></script>
+  </head>
+  <body>
+    <!-- wrapper -->
+    <div id="wrapper">
+      <div id="contents" ng-app="sc" ng-controller="ScCtrl" ng-init='search.target="table"'>
+        <!-- 조회 -->
+        <div class="row">
+          <div class="input">
+            <input
+              type="radio"
+              id="rdo_input_search_table"
+              name="rdo_input_search"
+              ng-model="search.target"
+              value="table"
+            /><label for="rdo_input_search_table" class="tab_radio">테이블</label>
+            <input
+              type="radio"
+              id="rdo_input_search_column"
+              name="rdo_input_search"
+              ng-model="search.target"
+              value="column"
+            /><label for="rdo_input_search_column" class="tab_radio">컬럼</label>
+            <input
+              type="radio"
+              id="rdo_input_search_dom"
+              name="rdo_input_search"
+              ng-model="search.target"
+              value="dom"
+            /><label for="rdo_input_search_dom" class="tab_radio">DOM</label>
+            <input
+              type="radio"
+              id="rdo_input_search_menu"
+              name="rdo_input_search"
+              ng-model="search.target"
+              value="menu"
+            /><label for="rdo_input_search_menu" class="tab_radio">Menu</label>
+            <input
+              type="radio"
+              id="rdo_input_search_organization"
+              name="rdo_input_search"
+              ng-model="search.target"
+              value="organization"
+            /><label for="rdo_input_search_organization" class="tab_radio">Organization</label>
+          </div>
+          <div class="input">
+            <input
+              type="text"
+              class="w300px"
+              ng-model="search.keyword"
+              ng-keydown="searchKeydown($event)"
+            />
+            <input type="button" value="조회" ng-click="search(search.keyword)" />
+            <label ng-show="search.loading == true" style="font-weight:bold;color:darkblue">Loading...</label>
+          </div>
+        </div>
+        <!-- // 조회 -->
+
+        <!-- table -->
+        <div ng-show="search.target == 'table'">
+          <!-- 테이블정보 -->
+          <div class="row">
+            <div class="label">테이블정보</div>
+            <div class="input">
+              {{ data.table.table.table }} - {{ data.table.table.comments }}
+            </div>
+          </div>
+          <!-- // 테이블정보 -->
+
+          <!-- 컬럼 -->
+          <div class="row">
+            <div class="label">테이블</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col />
+                  <col width="90" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                </colgroup>
+                <tr>
+                  <th>컬럼명</th>
+                  <th>한글명</th>
+                  <th>타입</th>
+                  <th>길이</th>
+                  <th>소숫점</th>
+                  <th>인덱스</th>
+                  <th>NULLABLE</th>
+                </tr>
+                <tr ng-repeat="row in data.table.column">
+                  <td>{{ row.column }}</td>
+                  <td>{{ row.comments }}</td>
+                  <td>{{ row.dataType }}</td>
+                  <td class="right">{{ row.len }}</td>
+                  <td class="right">{{ row.scale }}</td>
+                  <td class="right">{{ row.index }}</td>
+                  <td class="center">{{ row.nullable }}</td>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // 컬럼 -->
+
+          <!-- 인덱스 -->
+          <div class="row">
+            <div class="label">인덱스</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col />
+                </colgroup>
+                <tr>
+                  <th>인덱스명</th>
+                  <th>컬럼목록</th>
+                </tr>
+                <tr ng-repeat="row in data.table.index">
+                  <td>{{ row.index }}</td>
+                  <td>{{ row.columns }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // 인덱스 -->
+        </div>
+        <!-- //table -->
+
+        <!-- column -->
+        <div ng-show="search.target == 'column'">
+          <div class="row">
+            <div class="label">컬럼목록</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col width="180" />
+                  <col />
+                  <col width="90" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                </colgroup>
+                <tr>
+                  <th>테이블</th>
+                  <th>컬럼명</th>
+                  <th>한글명</th>
+                  <th>타입</th>
+                  <th>길이</th>
+                  <th>소숫점</th>
+                  <th>인덱스</th>
+                  <th>NULLABLE</th>
+                </tr>
+                <tr ng-repeat="row in data.column.column">
+                  <td>{{ row.table }}</td>
+                  <td>{{ row.column }}</td>
+                  <td>{{ row.comments }}</td>
+                  <td>{{ row.dataType }}</td>
+                  <td class="right">{{ row.len }}</td>
+                  <td class="right">{{ row.scale }}</td>
+                  <td class="right">{{ row.index }}</td>
+                  <td class="center">{{ row.nullable }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- //column -->
+
+        <!-- dom -->
+        <div ng-show="search.target == 'dom'">
+          <!-- dom tree -->
+          <div class="row">
+            <div class="label">Tree</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col />
+                </colgroup>
+                <tr>
+                  <th>DOM Tree</th>
+                </tr>
+                <tr ng-repeat="row in data.dom.tree">
+                  <td style="padding-left: {{ (row.lvl - 1) * 15 }}px;font-weight: {{ row.targetClassName ? 'bold' : 'normal' }}">{{ row.className }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // dom tree -->
+
+          <!-- dom attribute -->
+          <div class="row">
+            <div class="label">Attribute</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="120" />
+                  <col width="120" />
+                  <col width="140" />
+                  <col width="140" />
+                  <col width="30" />
+                  <col width="100" />
+                  <col width="100" />
+                  <col width="120" />
+                  <col width="50" />
+                  <col width="130" />
+                  <col width="" />
+                </colgroup>
+                <tr>
+                  <th>속성명</th>
+                  <th>테이블</th>
+                  <th>DB컬럼</th>
+                  <th>ALIAS</th>
+                  <th>타입</th>
+                  <th>타입명</th>
+                  <th>기본값</th>
+                  <th>Value Setting Info</th>
+                  <th>길이</th>
+                  <th>클래스명</th>
+                  <th>정의클래스명</th>
+                </tr>
+                <tr ng-repeat="row in data.dom.attribute">
+                  <td>{{ row.attributeName }}</td>
+                  <td>{{ row.dbmsTable }}</td>
+                  <td>{{ row.dbmsColumn }}</td>
+                  <td>{{ row.columnAlias }}</td>
+                  <td class="right">{{ row.dataType }}</td>
+                  <td>{{ row.dataTypeName }}</td>
+                  <td>{{ row.defaultValue }}</td>
+                  <td>{{ row.valueSettingInfo }}</td>
+                  <td class="right">{{ row.lengths }}</td>
+                  <td>{{ row.className }}</td>
+                  <td>{{ row.definedClassName }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // dom attribute -->
+          
+          <!-- dom relation -->
+          <div class="row">
+            <div class="label">Relation</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="120" />
+                  <col width="120" />
+                  <col width="250" />
+                  <col width="250" />
+                  <col width="250" />
+                  <col width="250" />
+                  <col width="" />
+                  <col width="80" />
+                </colgroup>
+                <tr>
+                  <th>NAMES</th>
+                  <th>DBMS TABLE</th>
+                  <th>FROM CLASS</th>
+                  <th>TO CLASS</th>
+                  <th>FROM RELATIONSHIP</th>
+                  <th>TO RELATIONSHIP</th>
+                  <th>REMARKS</th>
+                  <th>OWNERS</th>
+                </tr>
+                <tr ng-repeat="row in data.dom.relation">
+                  <td>{{ row.names }}</td>
+                  <td>{{ row.dbmsTable }}</td>
+                  <td>{{ row.fromClass }}</td>
+                  <td>{{ row.toClass }}</td>
+                  <td>{{ row.fromRelationship }}</td>
+                  <td>{{ row.toRelationship }}</td>
+                  <td>{{ row.remarks }}</td>
+                  <td>{{ row.owners }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // dom relation -->
+          
+          <!-- 컬럼 -->
+          <div class="row">
+            <div class="label">테이블</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col />
+                  <col width="90" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                  <col width="50" />
+                </colgroup>
+                <tr>
+                  <th>컬럼명</th>
+                  <th>한글명</th>
+                  <th>타입</th>
+                  <th>길이</th>
+                  <th>소숫점</th>
+                  <th>인덱스</th>
+                  <th>NULLABLE</th>
+                </tr>
+                <tr ng-repeat="row in data.dom.column">
+                  <td>{{ row.column }}</td>
+                  <td>{{ row.comments }}</td>
+                  <td>{{ row.dataType }}</td>
+                  <td class="right">{{ row.len }}</td>
+                  <td class="right">{{ row.scale }}</td>
+                  <td class="right">{{ row.index }}</td>
+                  <td class="center">{{ row.nullable }}</td>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // 컬럼 -->
+          
+          <!-- 인덱스 -->
+          <div class="row">
+            <div class="label">인덱스</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col />
+                </colgroup>
+                <tr>
+                  <th>인덱스명</th>
+                  <th>컬럼목록</th>
+                </tr>
+                <tr ng-repeat="row in data.dom.index">
+                  <td>{{ row.index }}</td>
+                  <td>{{ row.columns }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- // 인덱스 -->
+
+        </div>
+        <!-- // dom -->
+
+        <!-- menu -->
+        <div ng-show="search.target == 'menu'">
+          <div class="row">
+            <div class="label">Menu 목록</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="250" />
+                  <col width="150" />
+                  <col width="150" />
+                  <col width="150" />
+                  <col width="100" />
+                  <col width="100" />
+                  <col width="120" />
+                  <col />
+                  <col width="120" />
+                </colgroup>
+                <tr>
+                  <th>PARENT MENU</th>
+                  <th>CHILD MENU</th>
+                  <th>LABELS</th>
+                  <th>LABELS KR</th>
+                  <th>LINK HERF</th>
+                  <th>LINK ALT</th>
+                  <th>IMAGES</th>
+                  <th>ACCESS EXPRESSION</th>
+                  <th>MODULE NAME</th>
+                </tr>
+                <tr ng-repeat="row in data.menu.menu">
+                  <td style="padding-left: {{ (row.lvl - 1) * 15 }}px;font-weight: {{ row.lvl == 0 ? 'bold' : 'normal' }}">{{ row.parentMenu }}</td>
+                  <td style="font-weight: {{ row.lvl == 0 ? 'bold' : 'normal' }}">{{ row.childMenu }}</td>
+                  <td>{{ row.labels }}</td>
+                  <td>{{ row.labelsKr }}</td>
+                  <td>{{ row.linkHerf }}</td>
+                  <td>{{ row.linkAlt }}</td>
+                  <td>{{ row.images }}</td>
+                  <td>{{ row.accessExpression }}</td>
+                  <td>{{ row.moduleName }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- // menu -->
+        
+        <!-- organization -->
+        <div ng-show="search.target == 'organization'">
+          <div class="row">
+            <div class="label">Organization 목록</div>
+            <div class="input">
+              <table class="table w100p">
+                <colgroup>
+                  <col width="180" />
+                  <col width="180" />
+                  <col />
+                  <col width="120" />
+                  <col width="120" />
+                </colgroup>
+                <tr>
+                  <th>클래스명</th>
+                  <th>코드</th>
+                  <th>코드명</th>
+                  <th>본부</th>
+                  <th>상위그룹</th>
+                </tr>
+                <tr ng-repeat="row in data.organization.organization">
+                  <td>{{ row.pclassName }}</td>
+                  <td>{{ row.pnames }}</td>
+                  <td>{{ row.ptitles }}</td>
+                  <td>{{ row.pbusinessUnitCode }}</td>
+                  <td>{{ row.pupperOrganizationCode }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- // organization -->
+
+      </div>
+
+      <!-- footer -->
+      <div id="footer">Developer : JYS</div>
+      <!-- //footer -->
+    </div>
+    <!-- //wrapper -->
+  </body>
+</html>

@@ -1,0 +1,273 @@
+/* space init */
+body,
+div,
+p,
+ul,
+li,
+tr,
+td,
+th,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+/* font init */
+body,
+input,
+select,
+table,
+textarea {
+  font-size: 12px;
+  font-family: gulimche, sanself;
+  line-height: 1.7;
+}
+
+/* height init */
+input[type="text"],
+select {
+  height: 23px;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  height: 18px;
+  margin-top: 2px;
+  margin-left: 1px;
+}
+
+/* link init */
+a {
+  color: black;
+  text-decoration: none;
+}
+
+/* form style */
+.w100p {
+  width: 100%;
+}
+.w30p {
+  width: 30%;
+}
+.w69p {
+  width: 69%;
+}
+.w300px {
+  width: 300px;
+}
+.none {
+  display: none;
+}
+
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+
+a.btn {
+  padding: 2px 8px 0 8px;
+  border: 1px solid gray;
+  margin-left: 3px;
+  height: 21px;
+  display: inline-block;
+}
+a.btn:hover {
+  background-color: #888;
+}
+
+.table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+}
+.table td {
+  border: 1px solid rgb(146, 145, 145);
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.table td.right {
+  text-align: right;
+}
+.table td.center {
+  text-align: center;
+}
+.table th {
+  border: 1px solid #666;
+  background-color: #ccc;
+}
+
+/* layout */
+#wrapper {
+  width: 95%;
+  padding: 10px;
+}
+#header {
+  width: 100%;
+}
+#contents {
+  width: 100%;
+  padding: 10px;
+}
+#footer {
+  width: 100%;
+}
+
+#input {
+  border: 0px solid black;
+}
+#processer {
+  border: 0px solid black;
+}
+#output {
+  border: 0px solid black;
+}
+
+/* title */
+.title {
+  font-size: 18px;
+  padding-left: 10px;
+  margin: 30px 0 5px 0;
+  border: 1px solid #666;
+  border-left: 6px solid #666;
+}
+.title.input {
+  border: 1px solid #666;
+  border-left: 6px solid #666;
+  background-color: #d9ecf9;
+}
+.title.processer {
+  border: 1px solid #666;
+  border-left: 6px solid #666;
+  background-color: #aed6f1;
+}
+.title.output {
+  border: 1px solid #666;
+  border-left: 6px solid #666;
+  background-color: #83c0e9;
+}
+
+th input,
+td input,
+td select {
+  margin: 0;
+  border: 0px solid black;
+  height: 20px;
+}
+
+/* tab */
+.tab {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  overflow: auto;
+  border-left: 1px solid #666;
+}
+.tab li {
+  display: inline-block;
+  float: left;
+}
+.tab li a {
+  padding: 3px 20px 2px 20px;
+  display: inline-block;
+  border: 1px solid #666;
+  border-left: 0px solid #666;
+  background-color: #eee;
+}
+.tab li.active a {
+  background-color: #444;
+  color: white;
+}
+
+.tab_radio {
+  display: inline-block;
+  top: -4px;
+  position: relative;
+}
+
+/* form */
+.row {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #666;
+  overflow: auto;
+  background-color: #f4f6f7;
+  width: 100%;
+  margin-top: 3px;
+  overflow: auto;
+}
+.row .label {
+  width: 8%;
+  display: inline-block;
+  float: left;
+  text-align: right;
+  font-weight: bold;
+  clear: both;
+  padding-right: 10px;
+  height: 21px;
+  margin-top: 2px;
+}
+.row .label input {
+  margin: 0 3px 0 3px;
+  vertical-align: text-bottom;
+}
+.row .input {
+  width: 90%;
+  display: inline-block;
+  float: right;
+}
+.row .input > input,
+.row .input > select {
+  border: 1px solid #ccc;
+}
+.row .input a.btn_tbl {
+  padding: 0 8px;
+  margin-top: 1px;
+  border: 1px solid #666;
+  background-color: darkgray;
+  height: 19px;
+  display: inline-block;
+}
+.row .input a.btn_tbl:hover {
+  background-color: gray;
+}
+.button {
+  width: 100%;
+  text-align: right;
+  padding-top: 5px;
+}
+.button.top {
+  padding-top: 0;
+  padding-bottom: 5px;
+}
+.button input {
+  padding: 1px 8px 4px 8px;
+  border: 1px solid #d43f3a;
+  margin-left: 3px;
+  height: 23px;
+  background-color: #ff686d;
+  color: white;
+}
+.button input:active {
+  background-color: #ff585d;
+}
+
+.options .optionlabel {
+  width: 20%;
+  display: inline-block;
+  float: left;
+  text-align: right;
+  clear: both;
+  padding-right: 10px;
+  height: 21px;
+  margin-top: 2px;
+}
+.options .optioninput {
+  border: 1px solid #ccc;
+  width: 70%;
+}
