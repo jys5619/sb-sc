@@ -1,16 +1,16 @@
-package com.base.sc.biz.dom.data;
+package com.base.sc.biz.npdm.dom;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.vo.data.MenuVO;
-import com.base.sc.util.DBUtil;
+import com.base.sc.biz.npdm.vo.MenuVO;
+import com.base.sc.util.db.DBOracleUtil;
 
 public class Menu {
     
     public List<MenuVO> getMenuList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("menu/MENU_LIST", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("menu/MENU_LIST", tableName);
         
         List<MenuVO> resultList = new ArrayList<>();
         for ( Map<String, String> row : rows ) {

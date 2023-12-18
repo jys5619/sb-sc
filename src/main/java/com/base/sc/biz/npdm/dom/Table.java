@@ -1,4 +1,4 @@
-package com.base.sc.biz.dom.data;
+package com.base.sc.biz.npdm.dom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.base.sc.biz.vo.data.TableColumnVO;
-import com.base.sc.biz.vo.data.TableIndexVO;
-import com.base.sc.biz.vo.data.TableVO;
-import com.base.sc.util.DBUtil;
+import com.base.sc.biz.npdm.vo.TableColumnVO;
+import com.base.sc.biz.npdm.vo.TableIndexVO;
+import com.base.sc.biz.npdm.vo.TableVO;
 import com.base.sc.util.StrUtil;
+import com.base.sc.util.db.DBOracleUtil;
 
 public class Table {
     
@@ -19,7 +19,7 @@ public class Table {
     }
 
     public TableVO getTable(String tableName) {
-        Map<String, String> row = DBUtil.select("table/TABLE", tableName);
+        Map<String, String> row = DBOracleUtil.select("table/TABLE", tableName);
 
         TableVO tableVO = new TableVO();
 
@@ -33,8 +33,8 @@ public class Table {
     }
 
     public List<TableColumnVO> getColumnList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("table/TABLE_COLUMN_LIST", tableName);
-        List<Map<String, String>> commentsRows = DBUtil.selectList("table/TABLE_COMMENTS_LIST", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("table/TABLE_COLUMN_LIST", tableName);
+        List<Map<String, String>> commentsRows = DBOracleUtil.selectList("table/TABLE_COMMENTS_LIST", tableName);
 
         Map<String, String> commentsMap = commentsRows.stream().collect(Collectors.toMap(data -> data.get("dbmsColumn"), data -> data.get("comments")));
         
@@ -57,7 +57,7 @@ public class Table {
     }
 
     public List<TableIndexVO> getIndexList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("table/TABLE_INDEX_LIST", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("table/TABLE_INDEX_LIST", tableName);
 
         List<TableIndexVO> tableIndexList = new ArrayList<>();
 

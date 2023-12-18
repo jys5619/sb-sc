@@ -1,40 +1,80 @@
-package com.base.sc.util;
+package com.base.sc.util.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DBUtil {
+import com.base.sc.util.SqlUtil;
+import com.base.sc.util.StrUtil;
 
-    public static Map<String, String> select(String id, String param) {
-        String sql = SqlUtil.getSql(id);
+public class DBH2Util implements DBUtil {
+    
+    public static Map<String, String> select(String id) {
+        String sql = SqlUtil.getSql("main/" + id);
 
         List<Object> params = new ArrayList<>();
-        params.add(param);
 
-        Map<String, Object> result = select(sql, params);
+        Map<String, Object> result = search(sql, params);
         List<Map<String, String>> list = (List<Map<String, String>>)result.get("data");
         if ( list.size() == 0 ) return null;
         return list.get(0);
     }
 
-    public static List<Map<String, String>> selectList(String id, String param) {
-        String sql = SqlUtil.getSql(id);
+    public static Map<String, String> select(String id, String param) {
+        String sql = SqlUtil.getSql("main/" + id);
 
         List<Object> params = new ArrayList<>();
         params.add(param);
 
-        Map<String, Object> result = select(sql, params);
+        Map<String, Object> result = search(sql, params);
+        List<Map<String, String>> list = (List<Map<String, String>>)result.get("data");
+        if ( list.size() == 0 ) return null;
+        return list.get(0);
+    }
+
+    public static Map<String, String> select(String id, List<Object>  params) {
+        String sql = SqlUtil.getSql("main/" + id);
+
+        Map<String, Object> result = search(sql, params);
+        List<Map<String, String>> list = (List<Map<String, String>>)result.get("data");
+        if ( list.size() == 0 ) return null;
+        return list.get(0);
+    }
+
+    public static List<Map<String, String>> selectList(String id) {
+        String sql = SqlUtil.getSql("main/" + id);
+
+        List<Object> params = new ArrayList<>();
+
+        Map<String, Object> result = search(sql, params);
         return (List<Map<String, String>>)result.get("data");
     }
 
-    protected static Map<String, Object> select(String sql, List<Object> params) {
+    public static List<Map<String, String>> selectList(String id, String param) {
+        String sql = SqlUtil.getSql("main/" + id);
+
+        List<Object> params = new ArrayList<>();
+        params.add(param);
+
+        Map<String, Object> result = search(sql, params);
+        return (List<Map<String, String>>)result.get("data");
+    }
+
+    public static List<Map<String, String>> selectList(String id, List<Object> params) {
+        String sql = SqlUtil.getSql("main/" + id);
+
+        Map<String, Object> result = search(sql, params);
+        return (List<Map<String, String>>)result.get("data");
+    }
+
+    protected static Map<String, Object> search(String sql, List<Object> params) {
         Map<String, Object> result = new HashMap<>();
         List<String> metaList = new ArrayList<>();
         List<Map<String, String>> resultDataList = new ArrayList<>();
@@ -93,13 +133,15 @@ public class DBUtil {
         return result;
     }
 
-    protected static Connection getConnection() throws Exception {
-        String url = "jdbc:oracle:thin:@172.0.0.:33333:TEST";
-        String id = "NPDM_VEW";
-        String pw = "viewerqa23!";
-        
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        return DriverManager.getConnection(url, id, pw);
-    }
+    public static Connection getConnection() { 
+		Connection conn = null;
+		try {
+            Class.forName("org.h2.Driver");
+			conn = DriverManager.getConnection("jdbc:h2:~/db/data", "sa", "");
+		} catch (SQLException| ClassNotFoundException  e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+
 }
-    

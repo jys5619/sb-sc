@@ -1,16 +1,16 @@
-package com.base.sc.biz.dom.data;
+package com.base.sc.biz.npdm.dom;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.vo.data.TableColumnVO;
-import com.base.sc.util.DBUtil;
+import com.base.sc.biz.npdm.vo.TableColumnVO;
+import com.base.sc.util.db.DBOracleUtil;
 
 public class Column {
     
     public List<TableColumnVO> getColumnList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("column/COLUMN_LIST", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("column/COLUMN_LIST", tableName);
         
         List<TableColumnVO> columnList = new ArrayList<>();
         for ( Map<String, String> row : rows ) {

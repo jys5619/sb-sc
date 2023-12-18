@@ -1,18 +1,18 @@
-package com.base.sc.biz.dom.data;
+package com.base.sc.biz.npdm.dom;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.vo.data.DomAttributeVO;
-import com.base.sc.biz.vo.data.DomRelationVO;
-import com.base.sc.biz.vo.data.DomTreeVO;
-import com.base.sc.util.DBUtil;
+import com.base.sc.biz.npdm.vo.DomAttributeVO;
+import com.base.sc.biz.npdm.vo.DomRelationVO;
+import com.base.sc.biz.npdm.vo.DomTreeVO;
+import com.base.sc.util.db.DBOracleUtil;
 
 public class Dom {
     
     public List<DomTreeVO> getDomTreeList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("dom/DOM_TREE", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("dom/DOM_TREE", tableName);
         
         List<DomTreeVO> resultList = new ArrayList<>();
         for ( Map<String, String> row : rows ) {
@@ -28,7 +28,7 @@ public class Dom {
 
     
     public List<DomAttributeVO> getDomAttributeList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("dom/DOM_ATTRIBUTE", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("dom/DOM_ATTRIBUTE", tableName);
         
         List<DomAttributeVO> resultList = new ArrayList<>();
         for ( Map<String, String> row : rows ) {
@@ -51,7 +51,7 @@ public class Dom {
     }
     
     public List<DomRelationVO> getDomRelationList(String tableName) {
-        List<Map<String, String>> rows = DBUtil.selectList("dom/DOM_RELATION_LIST", tableName);
+        List<Map<String, String>> rows = DBOracleUtil.selectList("dom/DOM_RELATION_LIST", tableName);
         
         List<DomRelationVO> resultList = new ArrayList<>();
         for ( Map<String, String> row : rows ) {

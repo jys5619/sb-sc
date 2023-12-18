@@ -1,4 +1,4 @@
-package com.base.sc.data.service;
+package com.base.sc.web.npdm.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,22 +7,22 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.base.sc.biz.vo.data.TableIndexVO;
-import com.base.sc.biz.vo.data.TableVO;
-import com.base.sc.biz.dom.data.Column;
-import com.base.sc.biz.dom.data.Dom;
-import com.base.sc.biz.dom.data.Menu;
-import com.base.sc.biz.dom.data.Organization;
-import com.base.sc.biz.dom.data.Table;
-import com.base.sc.biz.vo.data.DomAttributeVO;
-import com.base.sc.biz.vo.data.DomRelationVO;
-import com.base.sc.biz.vo.data.DomTreeVO;
-import com.base.sc.biz.vo.data.MenuVO;
-import com.base.sc.biz.vo.data.OrganizationVO;
-import com.base.sc.biz.vo.data.TableColumnVO;
+import com.base.sc.biz.npdm.dom.Column;
+import com.base.sc.biz.npdm.dom.Dom;
+import com.base.sc.biz.npdm.dom.Menu;
+import com.base.sc.biz.npdm.dom.Organization;
+import com.base.sc.biz.npdm.dom.Table;
+import com.base.sc.biz.npdm.vo.DomAttributeVO;
+import com.base.sc.biz.npdm.vo.DomRelationVO;
+import com.base.sc.biz.npdm.vo.DomTreeVO;
+import com.base.sc.biz.npdm.vo.MenuVO;
+import com.base.sc.biz.npdm.vo.OrganizationVO;
+import com.base.sc.biz.npdm.vo.TableColumnVO;
+import com.base.sc.biz.npdm.vo.TableIndexVO;
+import com.base.sc.biz.npdm.vo.TableVO;
 
 @Service("tableDataService")
-public class TableDataServiceImpl implements TableDataService {
+public class NpdmServiceImpl implements NpdmService {
 
     @Override
     public Map<String, Object> searchTableInfo(String keyword) {

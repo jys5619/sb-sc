@@ -1,4 +1,4 @@
-package com.base.sc.biz.vo.data;
+package com.base.sc.biz.npdm.vo;
 
 public class TableVO  {
     private String owner;

@@ -1,4 +1,4 @@
-package com.base.sc.data;
+package com.base.sc.web.npdm;
 
 import java.util.Map;
 
@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.base.sc.data.service.TableDataService;
+import com.base.sc.web.npdm.service.NpdmService;
 
 import jakarta.annotation.Resource;
 
 @RestController
-public class TableDataController {
+public class NpdmController {
     @Resource(name = "tableDataService")
-    private TableDataService tableDataService;
+    private NpdmService tableDataService;
     
     @RequestMapping(value="/table/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getTableInfo(@PathVariable("keyword") String keyword) {

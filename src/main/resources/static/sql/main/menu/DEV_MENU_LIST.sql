@@ -1,0 +1,6 @@
+SELECT ID
+     , NAMES
+     , KOR_NAME
+     , MENU_PATH
+     , COMMENTS 
+  FROM DEV_MENU 

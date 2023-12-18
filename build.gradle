@@ -29,7 +29,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.oracle.database.jdbc:ojdbc11:21.1.0.0'
+	implementation 'com.oracle.database.jdbc:ojdbc11:21.1.0.0'   
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
