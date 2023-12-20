@@ -133,7 +133,7 @@ public class DBOracleUtil implements DBUtil {
     }
 
     protected static Connection getConnection() throws Exception {
-        String url = "jdbc:oracle:thin:@";
+        String url = "jdbc:oracle:thin:@10.185.250.96:3020:NPDMHAQ";
         String id = "NPDM_VEW";
         String pw = "viewerqa23!";
         

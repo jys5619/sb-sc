@@ -190,6 +190,58 @@ td select {
   position: relative;
 }
 
+.buttongroup {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  background-color: #aed6f1;
+  border: 1px solid rgb(71, 68, 223);
+}
+
+.form {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #666;
+  overflow: auto;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.form .field {
+  width: 90%;
+  overflow: auto;
+  margin: 10px;
+}
+.form .field .label {
+  width: 8%;
+  display: inline-block;
+  float: left;
+  text-align: right;
+  font-weight: bold;
+  clear: both;
+  padding-right: 10px;
+  height: 21px;
+  margin-top: 2px;
+}
+
+.form .field .input {
+  width: 91%;
+  display: inline-block;
+}
+
+.form .field .input input[type="text"] {
+  width: 400px;
+}
+
+.form .field .input textarea {
+  width: 100%;
+}
+
+.form .field .input input:read-only {
+  background-color: rgb(230, 230, 230);
+  border: 1px solid rgb(220, 220, 220);
+}
+
 /* form */
 .row {
   margin-bottom: 10px;

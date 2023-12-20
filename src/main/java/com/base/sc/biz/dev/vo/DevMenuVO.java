@@ -1,4 +1,4 @@
-package com.base.sc.biz.main.vo;
+package com.base.sc.biz.dev.vo;
 
 public class DevMenuVO {
     
