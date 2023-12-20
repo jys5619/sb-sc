@@ -176,50 +176,6 @@ if (!String.prototype.byterpad) {
 }
 // etc
 
-function convertDate(r) {
-  if (!r || r.length < 8) return null;
-  let year = parseInt(r.substring(0, 4));
-  let month = parseInt(r.substring(4, 6)) - 1;
-  let day = parseInt(r.substring(6, 8));
-  return new Date(year, month, day);
-}
-
-function convertDateString(r) {
-  if (!r) return "";
-  let year = r.getFullYear();
-  let month = r.getMonth() + 1;
-  let day = r.getDate();
-  return year + (month + "").lpad(2, "0") + (day + "").lpad(2, "0");
-}
-
-function convertDateTime(r) {
-  if (!r || r.length < 14) return null;
-  let year = parseInt(r.substring(0, 4));
-  let month = parseInt(r.substring(4, 6)) - 1;
-  let day = parseInt(r.substring(6, 8));
-  let hh = parseInt(r.substring(8, 10));
-  let mm = parseInt(r.substring(10, 12));
-  let ss = parseInt(r.substring(12, 14));
-  return new Date(year, month, day, hh, mm, ss, 0);
-}
-
-function convertDateTimeString(r) {
-  if (!r) return "";
-  let year = r.getFullYear();
-  let month = r.getMonth() + 1;
-  let day = r.getDate();
-  let hh = r.getHours();
-  let mm = r.getMinutes();
-  let ss = r.getSeconds();
-  return (
-    year +
-    (month + "").lpad(2, "0") +
-    (day + "").lpad(2, "0") +
-    (hh + "").lpad(2, "0") +
-    (mm + "").lpad(2, "0") +
-    (ss + "").lpad(2, "0")
-  );
-}
 
 if (!String.prototype.removeDblSpace) {
   String.prototype.removeDblSpace = function () {

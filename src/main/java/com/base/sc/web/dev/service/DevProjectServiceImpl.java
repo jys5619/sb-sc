@@ -1,6 +1,8 @@
 package com.base.sc.web.dev.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -31,8 +33,13 @@ public class DevProjectServiceImpl implements DevProjectService {
         devProjectVO.setModifier("JJJ");
         devProjectVO.setModified(dateTimeField);
 
+        List<DevProjectVO> devProjectList = new ArrayList<>();
+        devProjectList.add(devProjectVO);
+        devProjectList.add(devProjectVO);
+
         Map<String, Object> result = new HashMap<>();
         result.put("project", devProjectVO);
+        result.put("projectList", devProjectList);
 
         return result;
     }
