@@ -1,12 +1,23 @@
 package com.base.sc.framework;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,7 +27,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.classmate.ResolvedType;
+import com.fasterxml.classmate.types.ResolvedArrayType;
+import com.fasterxml.classmate.types.ResolvedInterfaceType;
+import com.fasterxml.classmate.types.ResolvedObjectType;
 import com.fasterxml.classmate.types.ResolvedPrimitiveType;
+import com.fasterxml.classmate.types.ResolvedRecursiveType;
+import com.fasterxml.classmate.types.TypePlaceHolder;
 
 import springfox.documentation.common.Compatibility;
 import springfox.documentation.service.RequestParameter;
@@ -30,6 +46,8 @@ import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class JsonResolverReader implements OperationBuilderPlugin {
+
+    private static final String TYPE_NAME_PREFIX = "class ";
 
     @Autowired
     private DocumentationPluginsManager pluginsManager;
@@ -112,7 +130,250 @@ public class JsonResolverReader implements OperationBuilderPlugin {
             Object obj = makeSample(uri, paramName, type.getErasedType(), 1);
             return obj;
         }
-        if ( )
+        if ( List.class.isAssignableFrom(erasedType) ) {
+            List list = new ArrayList();
+            Object obj = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
+            list.add(obj);
+            return list;
+        }
+        if ( Map.class.isAssignableFrom(erasedType) ) {
+            Map map = new HashMap<>();
+            Object key   = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
+            Object value = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(1));
+            map.put(key, value);
+            return map;
+        }
+        if ( Set.class.isAssignableFrom(erasedType) ) {
+            Set set = new HashSet();
+            Object obj = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
+            set.add(obj);
+            return set;
+        }
+        if ( type instanceof ResolvedObjectType ) {
+            Object obj = makeSample(uri, paramName, type.getErasedType(), 1);
+        }
+        if ( type instanceof ResolvedArrayType ) {
+            Object obj = makeSample(uri, paramName, type.getArrayElementType().getErasedType(), 1);
+            Object[] objArray = new Object[2];
+            objArray[0] = obj;
+            objArray[1] = obj;
+            return objArray;
+        }
+        if ( type instanceof TypePlaceHolder ) {
+            System.out.println("[Cannot Resolve-TypePlaceHolder]" + uri + "===>" + paramName);
+            return null;
+        } else if ( type instanceof ResolvedRecursiveType ) {
+            System.out.println("[Cannot Resolve-ResolvedRecursiveType]" + uri + "===>" + paramName);
+            return null;
+        } else if ( type instanceof ResolvedInterfaceType ) {
+            System.out.println("[Cannot Resolve-ResolvedInterfaceType]" + uri + "===>" + paramName);
+            return null;
+        }
+        System.out.println("[Cannot Resolve]" + uri + "===>" + paramName);
+        return null;
     }
 
+
+    private Object makeSample(String uri, String paramName, Type type, int depth) {
+        Class<?> cls = getClass(type);
+        if ( type instanceof Class ) {
+            if ( String.class.isAssignableFrom(cls) ) return "string";
+            if ( Integer.class.isAssignableFrom(cls) || int.class.isAssignableFrom(cls) ) return Integer.valueOf(0);
+            if ( Long.class.isAssignableFrom(cls) || long.class.isAssignableFrom(cls) ) return Long.valueOf(0l);
+            if ( Float.class.isAssignableFrom(cls) || float.class.isAssignableFrom(cls) ) return Float.valueOf(0f);
+            if ( Double.class.isAssignableFrom(cls) || double.class.isAssignableFrom(cls) ) return Double.valueOf(0d);
+            if ( Boolean.class.isAssignableFrom(cls) || boolean.class.isAssignableFrom(cls) ) return Boolean.valueOf(false);
+            if ( Date.class.isAssignableFrom(cls) ) return new Date();
+            if ( List.class.isAssignableFrom(cls) ) return new ArrayList();
+            if ( Map.class.isAssignableFrom(cls) ) return new HashMap();
+            if ( Set.class.isAssignableFrom(cls) ) return new HashSet();
+            
+            if ( cls.isEnum() ) {
+                Object[] objArray = cls.getEnumConstants();
+                if ( objArray.length > 0 ) return objArray[0];
+                return null;
+            }
+
+            Object obj = null;
+            try {
+                Constructor constructor = cls.getDeclaredConstructor();
+                if ( constructor == null ) return null;
+                obj = constructor.newInstance();
+                settingDefaultVal(uri, paramName, obj, depth + 1);
+                return obj;
+            } catch ( Exception e) {
+                if ( obj != null ) return obj;
+                return new Object();
+            }
+        } else if ( type instanceof ParameterizedType ) {
+            Object obj = makeSample(uri, paramName, (ParameterizedType)type, depth + 1);
+            return obj;
+        } else if ( type instanceof GenericArrayType ) {
+            Type componentType = ((GenericArrayType) type).getGenericComponentType();
+            Class<?> componentClass = getClass(componentType);
+            if ( componentClass != null ) {
+                return Array.newInstance(componentClass, 0);
+            }
+        }
+        return null;
+    }
+
+    private void settingDefaultVal(String uri, String paramName, Object voObject, int depth) {
+        List<Field> fieldList = getInheritedDeclaredFields(voObject.getClass(), null);
+        for ( int j = 0; j < fieldList.size(); j++ ) {
+            Field voField = fieldList.get(j);
+            Class<?> cls = voField.getType();
+            if ( voField.getType().isAssignableFrom(String.class)) {
+                setValue(voObject, voField, voField.getName(), true); 
+                continue;
+            } else if ( voField.getType().isAssignableFrom(int.class) || voField.getType().isAssignableFrom(Integer.class) ) {
+                setValue(voObject, voField, Integer.valueOf(0), true); 
+                continue;
+            } else if ( voField.getType().isAssignableFrom(long.class) || voField.getType().isAssignableFrom(Long.class) ) {
+                setValue(voObject, voField, Long.valueOf(0l), true); 
+                continue;
+            } else if ( voField.getType().isAssignableFrom(float.class) || voField.getType().isAssignableFrom(Float.class) ) {
+                setValue(voObject, voField, Float.valueOf(0.0f), true); 
+                continue;
+            } else if ( voField.getType().isAssignableFrom(double.class) || voField.getType().isAssignableFrom(Double.class) ) {
+                setValue(voObject, voField, Double.valueOf(0.0d), true); 
+                continue;
+            } else if ( voField.getType().isAssignableFrom(boolean.class) || voField.getType().isAssignableFrom(Boolean.class) ) {
+                setValue(voObject, voField, false, true); 
+                continue;
+            } else if ( Date.class.isAssignableFrom(voField.getType()) ) {
+                setValue(voObject, voField, new Date(), true);
+                continue;
+            } else if ( isJavaCollectionType(voField.getType()) ) {
+                if ( voField.getGenericType() instanceof ParameterizedType ) {
+                    Type genericType = voField.getGenericType();
+                    ParameterizedType parameterizedType = (ParameterizedType)voField.getGenericType();
+                    Type rawType = parameterizedType.getRawType();
+                    Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                    Type nestedType = actualTypeArguments[actualTypeArguments.length-1];
+                    if ( nestedType.getTypeName().equals(voObject.getClass().getTypeName()) ) {
+                        if ( !isJavaCollectionType(nestedType.getClass())) {
+                            System.out.println("Recursive ===> " + nestedType.getTypeName());
+                            if ( depth > 2 ) continue;
+                        }
+                        Object obj = makeSample(uri, paramName, (ParameterizedType)voField.getGenericType(), depth + 1);
+                        setValue(voObject, voField, obj, false);
+                        continue;
+                    } else {
+                        Object obj = makeSample(uri, paramName, voField.getGenericType(), depth + 1);
+                        setValue(voObject, voField, obj, false);
+                        continue;
+                    }
+                } else {
+                    if ( cls.isEnum() ) {
+                        Object[] objArray = cls.getEnumConstants();
+                        if ( objArray.length > 0 ) setValue(voObject, voField, objArray[0], true);
+                        continue;
+                    }
+                    if ( cls.isArray() ) {
+                        Type componentType = voField.getType().getComponentType();
+                        Object[] objArray = (Object[])Array.newInstance((Class)componentType, 1);
+                        objArray[0] = makeSample(uri, paramName, componentType, depth + 1);
+                        setValue(voObject, voField, objArray, false);
+                        continue;
+                    }
+                    if ( cls.isInterface() ) {
+                        continue;
+                    }
+                    // if ( ObjectRoot.class.isAssignableFrom(voField.getType()) ) continue;
+                    // Object obj = makeSample(uri, paramName, voField.getGenericType(), depth + 1);
+                    // setValue(voObject, voField, obj, false);
+                    // continue;
+                }
+
+            }
+        }
+    }
+
+    private Class<?> getClass(Type type) {
+        if ( type instanceof Class) {
+            return (Class<?>) type;
+        } else if ( type instanceof ParameterizedType ) {
+            return getClass(((ParameterizedType) type).getRawType());
+        } else if ( type instanceof GenericArrayType ) {
+            Type componentType = ((GenericArrayType) type).getGenericComponentType();
+            Class<?> componentClass = getClass(componentType);
+            if ( componentClass != null) {
+                return Array.newInstance(componentClass, 0).getClass();
+            }
+        }
+        String className = getClassName(type);
+        if ( className == null || className.isEmpty() ) {
+            return null;
+        }
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e ) {
+            throw new RuntimeException();
+        }
+    }
+
+    private boolean isJavaCollectionType(Class type) {
+        return List.class.isAssignableFrom(type) ||
+            Set.class.isAssignableFrom(type) ||
+            Map.class.isAssignableFrom(type);
+    }
+
+    private String getClassName(Type type) {
+        if ( type == null ) {
+            return "";
+        }
+        String className = type.toString();
+        if ( className.startsWith(TYPE_NAME_PREFIX) ) {
+            className = className.substring(TYPE_NAME_PREFIX.length());
+        }
+        return className;
+    }
+
+    private List<Field> getInheritedDeclaredFields(Class<?> fromClass, Class<?> stopWhenClass) {
+        if ( stopWhenClass == null ) {
+            stopWhenClass = Object.class;
+        }
+        List<Field> fields = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
+
+        Class<?> cls = fromClass;
+        do {
+            classes.add(cls);
+            cls = cls.getSuperclass();
+        } while ( cls != null && !cls.equals(stopWhenClass));
+
+        for ( int i = classes.size() - 1; i >= 0; i-- ) {
+            try {
+                Field[] fields1 = classes.get(i).getDeclaredFields();
+                if ( null != fields1 || fields1.length > 0 ) fields.addAll(Arrays.asList(fields1));
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+        }
+        return fields;
+    }
+
+    private void setValue(Object obj, Field voField, Object value, boolean emptyCheck) {
+        try {
+            if ( value != null ) {
+                if ( !(Modifier.isFinal(voField.getModifiers()) && Modifier.isStatic(voField.getModifiers()))) {
+                    if ( !voField.canAccess(obj) ) {
+                        voField.setAccessible(true);
+                        if ( !emptyCheck || voField.get(obj) == null ) {
+                            voField.set(obj, value);
+                        }
+                        voField.setAccessible(false);
+                    } else {
+                        if ( !emptyCheck || voField.get(obj) == null ) {
+                            voField.set(obj, value);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
+

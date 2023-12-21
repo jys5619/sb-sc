@@ -8,40 +8,38 @@ devApp.controller("DevCtrl", function ($scope, $http) {
 
   $scope.data = {};
 
-  $scope.successCallback = response => {
-    const { data } = response;
-    setResponseData(data);
-    $scope.data = { ...$scope.data, ...data };
-    $scope.loading = false;
-  };
-
   $scope.errorCallback = response => {
     $scope.loading = false;
   };
 
-  $scope.get = (url) => {
-    $http.get(`${$scope.server_url}${url}`).then(response => {
-      const { data } = response;
-      processResponseData(data);
-      $scope.data = { ...$scope.data, ...data };
-      $scope.loading = false;
-    }, response => {
-      $scope.loading = false;
-    });
-  }
+  $scope.get = url => {
+    $http.get(`${$scope.server_url}${url}`).then(
+      response => {
+        const { data } = response;
+        processResponseData(data);
+        $scope.data = { ...$scope.data, ...data };
+        $scope.loading = false;
+      },
+      response => {
+        $scope.loading = false;
+      }
+    );
+  };
 
   $scope.post = (url, data) => {
-
-    $http.post(`${$scope.server_url}${url}`, getRequestData(data)).then(response => {
-      $scope.loading = false;
-    }, response => {
-      $scope.loading = false;
-    });
-  }
+    $http.post(`${$scope.server_url}${url}`, getRequestData(data)).then(
+      response => {
+        $scope.loading = false;
+      },
+      response => {
+        $scope.loading = false;
+      }
+    );
+  };
 
   $scope.searchDevProject = () => {
     $scope.data.project = {};
-    $scope.get('/dev/project');
+    $scope.get("/dev/project");
   };
 
   $scope.saveDevProject = data => {
