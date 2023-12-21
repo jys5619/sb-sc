@@ -43,7 +43,6 @@ import springfox.documentation.spi.service.contexts.OperationContext;
 import springfox.documentation.spi.service.contexts.ParameterContext;
 import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 
-@Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class JsonResolverReader implements OperationBuilderPlugin {
 
