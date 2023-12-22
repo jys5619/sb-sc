@@ -1,10 +1,10 @@
-package com.base.sc.biz.npdm.dom;
+package com.base.sc.biz.dom.npdm;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.npdm.vo.OrganizationVO;
+import com.base.sc.biz.vo.npdm.OrganizationVO;
 import com.base.sc.util.db.DBOracleUtil;
 
 public class Organization {

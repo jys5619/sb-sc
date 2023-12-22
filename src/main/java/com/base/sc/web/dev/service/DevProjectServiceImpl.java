@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.base.sc.biz.common.DateField;
 import com.base.sc.biz.common.DateTimeField;
-import com.base.sc.biz.dev.vo.DevProjectVO;
+import com.base.sc.biz.vo.dev.DevProjectVO;
 
 @Service("devProjectService")
 public class DevProjectServiceImpl implements DevProjectService {

@@ -1,31 +1,42 @@
 package com.base.sc.framework;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.base.sc.biz.common.DateField;
+import com.base.sc.biz.common.DateTimeField;
+import com.base.sc.biz.vo.dev.DevProjectVO;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.types.ResolvedArrayType;
 import com.fasterxml.classmate.types.ResolvedInterfaceType;
@@ -33,179 +44,104 @@ import com.fasterxml.classmate.types.ResolvedObjectType;
 import com.fasterxml.classmate.types.ResolvedPrimitiveType;
 import com.fasterxml.classmate.types.ResolvedRecursiveType;
 import com.fasterxml.classmate.types.TypePlaceHolder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import springfox.documentation.common.Compatibility;
-import springfox.documentation.service.RequestParameter;
-import springfox.documentation.service.ResolvedMethodParameter;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.OperationBuilderPlugin;
-import springfox.documentation.spi.service.contexts.OperationContext;
-import springfox.documentation.spi.service.contexts.ParameterContext;
-import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
+import jakarta.servlet.http.HttpServletRequest;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
-public class JsonResolverReader implements OperationBuilderPlugin {
-
-    private static final String TYPE_NAME_PREFIX = "class ";
-
-    @Autowired
-    private DocumentationPluginsManager pluginsManager;
+@Component
+public class JsonResolverReader implements HandlerMethodArgumentResolver {
 
     @Override
-    public boolean supports(DocumentationType delimiter) {
-        return true;
+    public boolean supportsParameter(MethodParameter parameter) {
+        return isSupportsParameter(parameter.getParameterType()) && parameter.hasParameterAnnotation(JsonResolver.class);
     }
 
     @Override
-    public void apply(OperationContext context) {
-        boolean isJsonResolver = context.getParameters().stream()
-                .anyMatch(p -> p.hasParameterAnnotation(JsonResolver.class));
-        List<ResolvedMethodParameter> list = context.getParameters();
-        String uri = context.requestMappingPattern();
-        int index = 1;
-        if (isJsonResolver) {
-            Map<String, Object> mapForJson = new HashMap();
-            for (ResolvedMethodParameter param : list) {
-                if (!(param.getAnnotations().stream()
-                        .anyMatch(p -> (p.annotationType().isAssignableFrom(JsonResolver.class))))) {
-                    List<Compatibility<springfox.documentation.service.Parameter, RequestParameter>> parameters = new ArrayList<>();
-                    ParameterContext parameterContext = new ParameterContext(param, context.getDocumentationContext(),
-                            context.getGenericsNamingStrategy(), context, index++);
-                    parameters.add(pluginsManager.parameter(parameterContext));
-                    List<Compatibility<springfox.documentation.service.Parameter, RequestParameter>> compatibilities = parameters
-                            .stream().filter(hiddenParameter().negate()).toList();
-                    Collection<RequestParameter> requestParameters = compatibilities.stream()
-                            .map(Compatibility::getModern)
-                            .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
-                    context.operationBuilder().requestParameters(requestParameters);
-                    continue;
-                }
-                makeJsonParameterValueForJsonResolver(uri, mapForJson, param);
-            }
+    @Nullable
+    public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+        
+        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> payloadMap = mapper.readValue(httpServletRequest.getInputStream(), new TypeReference<Map<String,Object>>(){});
 
+        // parameter.getMethod();
+        // parameter.getAnnotatedElement();
+        // parameter.getAnnotatedElement();
+        // parameter.getMember();
+        // parameter.getParameterName();
+        // parameter.getGenericParameterType();
+        JsonResolver jsonResolver = parameter.getParameterAnnotation(JsonResolver.class);
+        String name = jsonResolver.name();
+
+        Object result = null;
+
+        if ( payloadMap.containsKey(name) ) {
+            getObject(payloadMap.get(name), parameter.getParameterType());
         }
+ 
+        return result;
     }
 
-    private void makeJsonParameterValueForJsonResolver(String uri, Map<String, Object> mapForJson,
-            ResolvedMethodParameter param) {
-        String parameter = "";
-        Object object = null;
+    public Object getObject(Object dataObject, Class<?> clazz) {
+        Object resultObject = null;
+        if ( isVariable(clazz) ) {
+            resultObject = dataObject;
+        } else if ( isProjectVO(clazz) ) {
+            resultObject = makeVO(dataObject, clazz.getName());
+        } else if ( clazz.isAssignableFrom(List.class) ) {
+            resultObject = makeList(dataObject);
+        }
+
+        return resultObject;
+    }
+
+    private Object makeVO(Object dataObject, String className) {
+        Object result = null;
         try {
-            if (isAnnotationFor(param, JsonResolver.class)) {
-                parameter = param.findAnnotation(JsonResolver.class).get().name();
-                object = param.findAnnotation(JsonResolver.class).get().defaultValue();
+            Class<?> cls = Class.forName(className);
+            try {
+                result = makeSample(dataObject, cls, 1);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            if ((object == null || "".equals(object.toString()))) {
-                object = makeSample(uri, parameter, param.getParameterType());
-            }
-
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            System.out.println("@Requestmapping 메소드의 파라메터가 잘못 선언되어 있습니다.");
         }
-        mapForJson.put(parameter, object);
-
+        
+        return result;
     }
 
-    private boolean isAnnotationFor(ResolvedMethodParameter param, Class cls) {
-        for (Annotation annotation : param.getAnnotations()) {
-            String str1 = annotation.annotationType().getSimpleName();
-            String str2 = cls.getSimpleName();
-            if (str1.equals(str2))
-                return false;
-        }
-        return true;
-    }
-
-    private Predicate<Compatibility<springfox.documentation.service.Parameter, RequestParameter>> hiddenParameter() {
-        return c -> c.getLegacy().map(springfox.documentation.service.Parameter::isHidden).orElse(false);
-    }
-
-    private Object makeSample(String uri, String paramName, ResolvedType type) {
-        Class erasedType = type.getErasedType();
-        List<ResolvedType> typeParameters = type.getTypeBindings().getTypeParameters();
-        if (type instanceof ResolvedPrimitiveType) {
-            Object obj = makeSample(uri, paramName, type.getErasedType(), 1);
-            return obj;
-        }
-        if ( List.class.isAssignableFrom(erasedType) ) {
-            List list = new ArrayList();
-            Object obj = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
-            list.add(obj);
-            return list;
-        }
-        if ( Map.class.isAssignableFrom(erasedType) ) {
-            Map map = new HashMap<>();
-            Object key   = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
-            Object value = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(1));
-            map.put(key, value);
-            return map;
-        }
-        if ( Set.class.isAssignableFrom(erasedType) ) {
-            Set set = new HashSet();
-            Object obj = typeParameters.size() == 0 ? new Object() : makeSample(uri, paramName, typeParameters.get(0));
-            set.add(obj);
-            return set;
-        }
-        if ( type instanceof ResolvedObjectType ) {
-            Object obj = makeSample(uri, paramName, type.getErasedType(), 1);
-        }
-        if ( type instanceof ResolvedArrayType ) {
-            Object obj = makeSample(uri, paramName, type.getArrayElementType().getErasedType(), 1);
-            Object[] objArray = new Object[2];
-            objArray[0] = obj;
-            objArray[1] = obj;
-            return objArray;
-        }
-        if ( type instanceof TypePlaceHolder ) {
-            System.out.println("[Cannot Resolve-TypePlaceHolder]" + uri + "===>" + paramName);
-            return null;
-        } else if ( type instanceof ResolvedRecursiveType ) {
-            System.out.println("[Cannot Resolve-ResolvedRecursiveType]" + uri + "===>" + paramName);
-            return null;
-        } else if ( type instanceof ResolvedInterfaceType ) {
-            System.out.println("[Cannot Resolve-ResolvedInterfaceType]" + uri + "===>" + paramName);
-            return null;
-        }
-        System.out.println("[Cannot Resolve]" + uri + "===>" + paramName);
-        return null;
-    }
-
-
-    private Object makeSample(String uri, String paramName, Type type, int depth) {
+    private Object makeSample(Object dataObject, Type type, int depth) {
         Class<?> cls = getClass(type);
         if ( type instanceof Class ) {
-            if ( String.class.isAssignableFrom(cls) ) return "string";
-            if ( Integer.class.isAssignableFrom(cls) || int.class.isAssignableFrom(cls) ) return Integer.valueOf(0);
-            if ( Long.class.isAssignableFrom(cls) || long.class.isAssignableFrom(cls) ) return Long.valueOf(0l);
-            if ( Float.class.isAssignableFrom(cls) || float.class.isAssignableFrom(cls) ) return Float.valueOf(0f);
-            if ( Double.class.isAssignableFrom(cls) || double.class.isAssignableFrom(cls) ) return Double.valueOf(0d);
-            if ( Boolean.class.isAssignableFrom(cls) || boolean.class.isAssignableFrom(cls) ) return Boolean.valueOf(false);
-            if ( Date.class.isAssignableFrom(cls) ) return new Date();
-            if ( List.class.isAssignableFrom(cls) ) return new ArrayList();
-            if ( Map.class.isAssignableFrom(cls) ) return new HashMap();
-            if ( Set.class.isAssignableFrom(cls) ) return new HashSet();
-            
-            if ( cls.isEnum() ) {
+            if ( isVariable(cls) ) {
+                return getVariableValue(cls, dataObject);
+            } else if ( List.class.isAssignableFrom(cls) ) {
+                return dataObject == null ? new ArrayList<>() : ""; // TODO
+            } else if ( Map.class.isAssignableFrom(cls) ) {
+                return dataObject == null ? new HashMap<>() : ""; // TODO
+            } else if ( Set.class.isAssignableFrom(cls) ) {
+                return dataObject == null ? new HashSet<>() : ""; // TODO
+            } else if ( cls.isEnum() ) {
                 Object[] objArray = cls.getEnumConstants();
-                if ( objArray.length > 0 ) return objArray[0];
-                return null;
-            }
-
-            Object obj = null;
-            try {
-                Constructor constructor = cls.getDeclaredConstructor();
-                if ( constructor == null ) return null;
-                obj = constructor.newInstance();
-                settingDefaultVal(uri, paramName, obj, depth + 1);
-                return obj;
-            } catch ( Exception e) {
-                if ( obj != null ) return obj;
-                return new Object();
+                return ( objArray.length > 0 ) ? objArray[0] : null;
+            } else {
+                Object obj = null;
+                try {
+                    Constructor<?> constructor = cls.getDeclaredConstructor();
+                    if ( constructor == null ) return null;
+                    obj = constructor.newInstance();
+                    setDataValue(dataObject, obj, depth + 1);
+                    return obj;
+                } catch ( Exception e) {
+                    if ( obj != null ) return obj;
+                    return new Object();
+                }
             }
         } else if ( type instanceof ParameterizedType ) {
-            Object obj = makeSample(uri, paramName, (ParameterizedType)type, depth + 1);
+            Object obj = makeSample(dataObject, (ParameterizedType)type, depth + 1);
             return obj;
         } else if ( type instanceof GenericArrayType ) {
             Type componentType = ((GenericArrayType) type).getGenericComponentType();
@@ -217,33 +153,20 @@ public class JsonResolverReader implements OperationBuilderPlugin {
         return null;
     }
 
-    private void settingDefaultVal(String uri, String paramName, Object voObject, int depth) {
+    
+    private void setDataValue(Object dataObject, Object voObject, int depth) {
         List<Field> fieldList = getInheritedDeclaredFields(voObject.getClass(), null);
-        for ( int j = 0; j < fieldList.size(); j++ ) {
-            Field voField = fieldList.get(j);
+        for ( Field voField : fieldList ) {
             Class<?> cls = voField.getType();
-            if ( voField.getType().isAssignableFrom(String.class)) {
-                setValue(voObject, voField, voField.getName(), true); 
+            if ( isVariable(cls) ) {
+                 setFieldValue(voObject, voField, getVariableValue(cls, dataObject), true);
+            } else if ( DateField.class.isAssignableFrom(voField.getType()) ) {
+                setFieldValue(voObject, voField, new DateField(), true);
                 continue;
-            } else if ( voField.getType().isAssignableFrom(int.class) || voField.getType().isAssignableFrom(Integer.class) ) {
-                setValue(voObject, voField, Integer.valueOf(0), true); 
+            } else if ( DateTimeField.class.isAssignableFrom(voField.getType()) ) {
+                setFieldValue(voObject, voField, new DateTimeField(), true);
                 continue;
-            } else if ( voField.getType().isAssignableFrom(long.class) || voField.getType().isAssignableFrom(Long.class) ) {
-                setValue(voObject, voField, Long.valueOf(0l), true); 
-                continue;
-            } else if ( voField.getType().isAssignableFrom(float.class) || voField.getType().isAssignableFrom(Float.class) ) {
-                setValue(voObject, voField, Float.valueOf(0.0f), true); 
-                continue;
-            } else if ( voField.getType().isAssignableFrom(double.class) || voField.getType().isAssignableFrom(Double.class) ) {
-                setValue(voObject, voField, Double.valueOf(0.0d), true); 
-                continue;
-            } else if ( voField.getType().isAssignableFrom(boolean.class) || voField.getType().isAssignableFrom(Boolean.class) ) {
-                setValue(voObject, voField, false, true); 
-                continue;
-            } else if ( Date.class.isAssignableFrom(voField.getType()) ) {
-                setValue(voObject, voField, new Date(), true);
-                continue;
-            } else if ( isJavaCollectionType(voField.getType()) ) {
+            } else if ( isCollectionType(voField.getType()) ) {
                 if ( voField.getGenericType() instanceof ParameterizedType ) {
                     Type genericType = voField.getGenericType();
                     ParameterizedType parameterizedType = (ParameterizedType)voField.getGenericType();
@@ -251,29 +174,29 @@ public class JsonResolverReader implements OperationBuilderPlugin {
                     Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                     Type nestedType = actualTypeArguments[actualTypeArguments.length-1];
                     if ( nestedType.getTypeName().equals(voObject.getClass().getTypeName()) ) {
-                        if ( !isJavaCollectionType(nestedType.getClass())) {
+                        if ( !isCollectionType(nestedType.getClass())) {
                             System.out.println("Recursive ===> " + nestedType.getTypeName());
                             if ( depth > 2 ) continue;
                         }
-                        Object obj = makeSample(uri, paramName, (ParameterizedType)voField.getGenericType(), depth + 1);
-                        setValue(voObject, voField, obj, false);
+                        Object obj = makeSample(dataObject, (ParameterizedType)voField.getGenericType(), depth + 1);
+                        setFieldValue(voObject, voField, obj, false);
                         continue;
                     } else {
-                        Object obj = makeSample(uri, paramName, voField.getGenericType(), depth + 1);
-                        setValue(voObject, voField, obj, false);
+                        Object obj = makeSample(dataObject, voField.getGenericType(), depth + 1);
+                        setFieldValue(voObject, voField, obj, false);
                         continue;
                     }
                 } else {
                     if ( cls.isEnum() ) {
                         Object[] objArray = cls.getEnumConstants();
-                        if ( objArray.length > 0 ) setValue(voObject, voField, objArray[0], true);
+                        if ( objArray.length > 0 ) setFieldValue(voObject, voField, objArray[0], true);
                         continue;
                     }
                     if ( cls.isArray() ) {
                         Type componentType = voField.getType().getComponentType();
                         Object[] objArray = (Object[])Array.newInstance((Class)componentType, 1);
-                        objArray[0] = makeSample(uri, paramName, componentType, depth + 1);
-                        setValue(voObject, voField, objArray, false);
+                        objArray[0] = makeSample(dataObject, componentType, depth + 1);
+                        setFieldValue(voObject, voField, objArray, false);
                         continue;
                     }
                     if ( cls.isInterface() ) {
@@ -281,52 +204,12 @@ public class JsonResolverReader implements OperationBuilderPlugin {
                     }
                     // if ( ObjectRoot.class.isAssignableFrom(voField.getType()) ) continue;
                     // Object obj = makeSample(uri, paramName, voField.getGenericType(), depth + 1);
-                    // setValue(voObject, voField, obj, false);
+                    // setFieldValue(voObject, voField, obj, false);
                     // continue;
                 }
 
             }
         }
-    }
-
-    private Class<?> getClass(Type type) {
-        if ( type instanceof Class) {
-            return (Class<?>) type;
-        } else if ( type instanceof ParameterizedType ) {
-            return getClass(((ParameterizedType) type).getRawType());
-        } else if ( type instanceof GenericArrayType ) {
-            Type componentType = ((GenericArrayType) type).getGenericComponentType();
-            Class<?> componentClass = getClass(componentType);
-            if ( componentClass != null) {
-                return Array.newInstance(componentClass, 0).getClass();
-            }
-        }
-        String className = getClassName(type);
-        if ( className == null || className.isEmpty() ) {
-            return null;
-        }
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e ) {
-            throw new RuntimeException();
-        }
-    }
-
-    private boolean isJavaCollectionType(Class type) {
-        return List.class.isAssignableFrom(type) ||
-            Set.class.isAssignableFrom(type) ||
-            Map.class.isAssignableFrom(type);
-    }
-
-    private String getClassName(Type type) {
-        if ( type == null ) {
-            return "";
-        }
-        String className = type.toString();
-        if ( className.startsWith(TYPE_NAME_PREFIX) ) {
-            className = className.substring(TYPE_NAME_PREFIX.length());
-        }
-        return className;
     }
 
     private List<Field> getInheritedDeclaredFields(Class<?> fromClass, Class<?> stopWhenClass) {
@@ -353,7 +236,7 @@ public class JsonResolverReader implements OperationBuilderPlugin {
         return fields;
     }
 
-    private void setValue(Object obj, Field voField, Object value, boolean emptyCheck) {
+    private void setFieldValue(Object obj, Field voField, Object value, boolean emptyCheck) {
         try {
             if ( value != null ) {
                 if ( !(Modifier.isFinal(voField.getModifiers()) && Modifier.isStatic(voField.getModifiers()))) {
@@ -374,5 +257,136 @@ public class JsonResolverReader implements OperationBuilderPlugin {
             System.out.println(e.getMessage());
         }
     }
-}
 
+
+    private Class<?> getClass(Type type) {
+        if ( type instanceof Class) {
+            return (Class<?>) type;
+        } else if ( type instanceof ParameterizedType ) {
+            return getClass(((ParameterizedType) type).getRawType());
+        } else if ( type instanceof GenericArrayType ) {
+            Type componentType = ((GenericArrayType) type).getGenericComponentType();
+            Class<?> componentClass = getClass(componentType);
+            if ( componentClass != null) {
+                return Array.newInstance(componentClass, 0).getClass();
+            }
+        }
+        String className = getClassName(type);
+        if ( className == null || className.isEmpty() ) {
+            return null;
+        }
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e ) {
+            throw new RuntimeException();
+        }
+    }
+
+    private String getClassName(Type type) {
+        if ( type == null ) return "";
+        String className = type.toString();
+        if ( className.startsWith("class ") ) {
+            className = className.substring("class ".length());
+        }
+        return className;
+    }
+
+    private boolean isCollectionType(Class<?> type) {
+        return List.class.isAssignableFrom(type) ||
+            Set.class.isAssignableFrom(type) ||
+            Map.class.isAssignableFrom(type);
+    }
+
+    
+    private List<Object> makeList(Object obj) {
+        return null;
+    }
+
+    private boolean isSupportsParameter(Class<?> clazz) {
+        boolean result = clazz.isAssignableFrom(String.class) ||
+        clazz.isAssignableFrom(Integer.class) || 
+        clazz.isAssignableFrom(int.class) ||
+        clazz.isAssignableFrom(Long.class) || 
+        clazz.isAssignableFrom(long.class) ||
+        clazz.isAssignableFrom(Float.class) || 
+        clazz.isAssignableFrom(float.class) ||
+        clazz.isAssignableFrom(Double.class) || 
+        clazz.isAssignableFrom(double.class) ||
+        clazz.isAssignableFrom(Boolean.class) || 
+        clazz.isAssignableFrom(boolean.class) ||
+        clazz.isAssignableFrom(Date.class) ||
+        clazz.isAssignableFrom(List.class) ||
+        clazz.isAssignableFrom(Map.class) ||
+        clazz.isAssignableFrom(Set.class) ||
+        isProjectVO(clazz)
+        ;
+
+        return result;
+    }
+
+    private boolean isVariable(Class<?> clazz) {
+        return clazz.isAssignableFrom(String.class) ||
+        clazz.isAssignableFrom(Integer.class) || 
+        clazz.isAssignableFrom(int.class) ||
+        clazz.isAssignableFrom(Long.class) || 
+        clazz.isAssignableFrom(long.class) ||
+        clazz.isAssignableFrom(Float.class) || 
+        clazz.isAssignableFrom(float.class) ||
+        clazz.isAssignableFrom(Double.class) || 
+        clazz.isAssignableFrom(double.class) ||
+        clazz.isAssignableFrom(Boolean.class) || 
+        clazz.isAssignableFrom(boolean.class) ||
+        clazz.isAssignableFrom(Date.class);
+    }
+
+    private Object getVariableValue(Class<?> clazz, Object dataObject) {
+        Object result = null;
+        if ( dataObject == null ) {
+            result = dataObject;
+        } else if ( String.class.isAssignableFrom(clazz) ) {
+            result = dataObject.toString();
+        } else if ( Integer.class.isAssignableFrom(clazz) || int.class.isAssignableFrom(clazz) ) {
+            result = Integer.valueOf(dataObject.toString());
+        } else if ( Long.class.isAssignableFrom(clazz) || long.class.isAssignableFrom(clazz) ) {
+            result = Long.valueOf(dataObject.toString());
+        } else if ( Float.class.isAssignableFrom(clazz) || float.class.isAssignableFrom(clazz) ) {
+            result = Float.valueOf(dataObject.toString());
+        } else if ( Double.class.isAssignableFrom(clazz) || double.class.isAssignableFrom(clazz) ) {
+            result = Double.valueOf(dataObject.toString());
+        } else if ( Boolean.class.isAssignableFrom(clazz) || boolean.class.isAssignableFrom(clazz) ) {
+            result = Boolean.valueOf(dataObject.toString());
+        } else if ( Date.class.isAssignableFrom(clazz) ) {
+            result = Boolean.valueOf(dataObject.toString());
+        }
+        return result;
+    }
+
+    private boolean isUserVariable(Class<?> clazz) {
+        return clazz.isAssignableFrom(DateTimeField.class) || clazz.isAssignableFrom(DateField.class);
+    }
+    private boolean isProjectVO(Class<?> clazz) {
+        return clazz.getName().startsWith("com.base.sc.biz.vo") && clazz.getName().endsWith("VO");
+    }
+
+    private boolean get(Class<?> clazz) {
+        boolean result = clazz.isAssignableFrom(String.class) ||
+        clazz.isAssignableFrom(Integer.class) || 
+        clazz.isAssignableFrom(int.class) ||
+        clazz.isAssignableFrom(Long.class) || 
+        clazz.isAssignableFrom(long.class) ||
+        clazz.isAssignableFrom(Float.class) || 
+        clazz.isAssignableFrom(float.class) ||
+        clazz.isAssignableFrom(Double.class) || 
+        clazz.isAssignableFrom(double.class) ||
+        clazz.isAssignableFrom(Boolean.class) || 
+        clazz.isAssignableFrom(boolean.class) ||
+        clazz.isAssignableFrom(Date.class) ||
+        clazz.isAssignableFrom(List.class) ||
+        clazz.isAssignableFrom(Map.class) ||
+        clazz.isAssignableFrom(Set.class) ||
+        (clazz.getName().startsWith("com.base.sc.biz.vo") && clazz.getName().endsWith("VO"))
+        ;
+
+        return result;
+    }
+}

@@ -1,10 +1,10 @@
-package com.base.sc.biz.dev.dom;
+package com.base.sc.biz.dom.dev;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.dev.vo.DevMenuVO;
+import com.base.sc.biz.vo.dev.DevMenuVO;
 import com.base.sc.util.db.DBH2Util;
 
 public class DevMenu {

@@ -7,19 +7,19 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.base.sc.biz.npdm.dom.Column;
-import com.base.sc.biz.npdm.dom.Dom;
-import com.base.sc.biz.npdm.dom.Menu;
-import com.base.sc.biz.npdm.dom.Organization;
-import com.base.sc.biz.npdm.dom.Table;
-import com.base.sc.biz.npdm.vo.DomAttributeVO;
-import com.base.sc.biz.npdm.vo.DomRelationVO;
-import com.base.sc.biz.npdm.vo.DomTreeVO;
-import com.base.sc.biz.npdm.vo.MenuVO;
-import com.base.sc.biz.npdm.vo.OrganizationVO;
-import com.base.sc.biz.npdm.vo.TableColumnVO;
-import com.base.sc.biz.npdm.vo.TableIndexVO;
-import com.base.sc.biz.npdm.vo.TableVO;
+import com.base.sc.biz.dom.npdm.Column;
+import com.base.sc.biz.dom.npdm.Dom;
+import com.base.sc.biz.dom.npdm.Menu;
+import com.base.sc.biz.dom.npdm.Organization;
+import com.base.sc.biz.dom.npdm.Table;
+import com.base.sc.biz.vo.npdm.DomAttributeVO;
+import com.base.sc.biz.vo.npdm.DomRelationVO;
+import com.base.sc.biz.vo.npdm.DomTreeVO;
+import com.base.sc.biz.vo.npdm.MenuVO;
+import com.base.sc.biz.vo.npdm.OrganizationVO;
+import com.base.sc.biz.vo.npdm.TableColumnVO;
+import com.base.sc.biz.vo.npdm.TableIndexVO;
+import com.base.sc.biz.vo.npdm.TableVO;
 
 @Service("tableDataService")
 public class NpdmServiceImpl implements NpdmService {

@@ -1,4 +1,4 @@
-package com.base.sc.biz.npdm.vo;
+package com.base.sc.biz.vo.npdm;
 
 import java.util.List;
 

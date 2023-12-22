@@ -1,4 +1,4 @@
-package com.base.sc.biz.npdm.vo;
+package com.base.sc.biz.vo.npdm;
 
 public class DomRelationVO {
     private String names;

@@ -1,26 +1,15 @@
-package com.base.sc.biz.dev.vo;
+package com.base.sc.biz.vo.dev;
 
 import com.base.sc.biz.common.DateField;
-import com.base.sc.biz.common.DateTimeField;
+import com.base.sc.biz.vo.root.ObjectRootVO;
 
-public class DevProjectVO {
-	private String id;
+public class DevProjectVO extends ObjectRootVO {
 	private String projectName;
 	private String discriptions;
 	private DateField planStartDate;
 	private DateField planEndDate;
 	private DateField realStartDate;
 	private DateField realEndDate;
-	private String modifier;
-	private DateTimeField modified;
-	private String creator;
-	private DateTimeField created;
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
     public String getProjectName() {
         return projectName;
     }
@@ -56,30 +45,6 @@ public class DevProjectVO {
     }
     public void setRealEndDate(DateField realEndDate) {
         this.realEndDate = realEndDate;
-    }
-    public String getModifier() {
-        return modifier;
-    }
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-    public DateTimeField getModified() {
-        return modified;
-    }
-    public void setModified(DateTimeField modified) {
-        this.modified = modified;
-    }
-    public String getCreator() {
-        return creator;
-    }
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-    public DateTimeField getCreated() {
-        return created;
-    }
-    public void setCreated(DateTimeField created) {
-        this.created = created;
     }
     
 }

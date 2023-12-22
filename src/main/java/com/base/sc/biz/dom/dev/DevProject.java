@@ -1,4 +1,4 @@
-package com.base.sc.biz.dev.dom;
+package com.base.sc.biz.dom.dev;
 
 public class DevProject {
     

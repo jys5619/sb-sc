@@ -1,4 +1,4 @@
-package com.base.sc.biz.npdm.dom;
+package com.base.sc.biz.dom.npdm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.base.sc.biz.npdm.vo.TableColumnVO;
-import com.base.sc.biz.npdm.vo.TableIndexVO;
-import com.base.sc.biz.npdm.vo.TableVO;
+import com.base.sc.biz.vo.npdm.TableColumnVO;
+import com.base.sc.biz.vo.npdm.TableIndexVO;
+import com.base.sc.biz.vo.npdm.TableVO;
 import com.base.sc.util.StrUtil;
 import com.base.sc.util.db.DBOracleUtil;
 

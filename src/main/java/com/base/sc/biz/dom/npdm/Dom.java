@@ -1,12 +1,12 @@
-package com.base.sc.biz.npdm.dom;
+package com.base.sc.biz.dom.npdm;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.base.sc.biz.npdm.vo.DomAttributeVO;
-import com.base.sc.biz.npdm.vo.DomRelationVO;
-import com.base.sc.biz.npdm.vo.DomTreeVO;
+import com.base.sc.biz.vo.npdm.DomAttributeVO;
+import com.base.sc.biz.vo.npdm.DomRelationVO;
+import com.base.sc.biz.vo.npdm.DomTreeVO;
 import com.base.sc.util.db.DBOracleUtil;
 
 public class Dom {
