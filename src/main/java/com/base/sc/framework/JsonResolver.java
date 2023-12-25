@@ -11,5 +11,5 @@ public @interface JsonResolver {
 
     public abstract String name();
 
-    public abstract String defaultValue() default "";
+    public abstract Class<?> object() default Object.class;
 }

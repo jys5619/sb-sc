@@ -1,19 +1,25 @@
 package com.base.sc.biz.common;
 
+import java.util.Date;
+
 public class DateField {
-    private String date;
+    private Date date;
     private String val;
-    public String getDate() {
+
+    public Date getDate() {
         return date;
     }
-    public void setDate(String date) {
+
+    public void setDate(Date date) {
         this.date = date;
     }
+
     public String getVal() {
         return val;
     }
+
     public void setVal(String val) {
         this.val = val;
-    } 
-    
+    }
+
 }

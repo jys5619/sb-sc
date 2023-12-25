@@ -1,6 +1,6 @@
 #FileLock
-#Fri Dec 22 18:06:22 KST 2023
-server=192.168.0.92\:52912
-hostName=DESKTOP-8KMHP2P
+#Mon Dec 25 23:59:15 KST 2023
+server=192.168.10.111\:64685
+hostName=192.168.10.111
 method=file
-id=18c90c69553b3a1dd25a9e1a5ef28b7cac3b5d42b7b
+id=18ca17cba0becbb10a2d3e15afeb2001121cbb81733
