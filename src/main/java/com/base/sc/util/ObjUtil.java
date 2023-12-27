@@ -31,13 +31,6 @@ public class ObjUtil {
     // Map -> VO
     public static <T> T convertToValueObject(Map<String, Object> map, Class<T> type) {
         try {
-            if (Objects.isNull(type)) {
-                throw new NullPointerException("Class cannot be null");
-            }
-            if (Objects.isNull(map) || map.isEmpty()) {
-                throw new IllegalArgumentException("map is null or empty");
-            }
-
             T instance = type.getConstructor().newInstance();
             Field[] fields = type.getDeclaredFields();
 

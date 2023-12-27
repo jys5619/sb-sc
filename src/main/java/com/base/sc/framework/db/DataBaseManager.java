@@ -1,4 +1,4 @@
-package com.base.sc.util.db;
+package com.base.sc.framework.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,8 +12,9 @@ import java.util.Map;
 
 import com.base.sc.util.SqlUtil;
 import com.base.sc.util.StrUtil;
+import com.base.sc.util.db.DBUtil;
 
-public class DBOracleUtil implements DBUtil {
+public class DataBaseManager {
 
     public static Map<String, String> select(String id) {
         String sql = SqlUtil.getSql(id);
@@ -133,9 +134,9 @@ public class DBOracleUtil implements DBUtil {
     }
 
     protected static Connection getConnection() throws Exception {
-        String url = "jdbc:oracle:thin:@10.sdfs.242.222:444:sdfsdf";
-        String id = "2222";
-        String pw = "424!";
+        String url = "jdbc:oracle:thin:@10.185.250.96:3020:NPDMHAQ";
+        String id = "NPDM_VEW";
+        String pw = "viewerqa23!";
         
         Class.forName("oracle.jdbc.driver.OracleDriver");
         return DriverManager.getConnection(url, id, pw);

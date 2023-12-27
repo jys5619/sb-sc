@@ -1,0 +1,13 @@
+SELECT ID
+     , MENU_LEVEL_1
+     , MENU_LEVEL_2
+     , MENU_LEVEL_3
+     , MENU_LEVEL_4
+     , MENU_TYPE
+     , MENU_PATH
+     , DISCRIPTIONS
+     , MODIFIER
+     , MODIFIED
+     , CREATOR
+     , CREATED 
+  FROM DEV_MENU

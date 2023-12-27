@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.base.sc.framework.JsonResolverReader;
+import com.base.sc.framework.annotation.JsonResolverReader;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

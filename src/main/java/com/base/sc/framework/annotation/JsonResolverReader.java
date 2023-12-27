@@ -1,4 +1,4 @@
-package com.base.sc.framework;
+package com.base.sc.framework.annotation;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;

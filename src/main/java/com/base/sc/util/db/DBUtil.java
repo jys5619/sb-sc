@@ -17,80 +17,80 @@ import com.base.sc.util.StrUtil;
 
 public interface DBUtil {
 
-    public static <T> T search(String sql, List<Object> params) {
-        Map<String, Object> result = new HashMap<>();
-        List<String> metaList = new ArrayList<>();
-        List<Map<String, String>> resultDataList = new ArrayList<>();
+    // public static <T> T search(String sql, List<Object> params) {
+    //     Map<String, Object> result = new HashMap<>();
+    //     List<String> metaList = new ArrayList<>();
+    //     List<Map<String, String>> resultDataList = new ArrayList<>();
 
-        result.put("columns", metaList);
-        result.put("data", resultDataList);
+    //     result.put("columns", metaList);
+    //     result.put("data", resultDataList);
 
-        Connection conn = null;
-        PreparedStatement psmt = null;
-        ResultSet rs = null;
+    //     Connection conn = null;
+    //     PreparedStatement psmt = null;
+    //     ResultSet rs = null;
 
-        try {
-            conn = getConnection();
-            psmt = conn.prepareStatement(sql);
+    //     try {
+    //         conn = getConnection();
+    //         psmt = conn.prepareStatement(sql);
 
-            for (int i = 0; i < params.size(); i++) {
-                Object param = params.get(i);
-                if (param instanceof String) {
-                    psmt.setString(i + 1, param.toString());
-                } else if (param instanceof Integer) {
-                    psmt.setInt(i + 1, Integer.valueOf(param.toString()));
-                } else if (param instanceof Long) {
-                    psmt.setLong(i + 1, Long.valueOf(param.toString()));
-                }
-            }
+    //         for (int i = 0; i < params.size(); i++) {
+    //             Object param = params.get(i);
+    //             if (param instanceof String) {
+    //                 psmt.setString(i + 1, param.toString());
+    //             } else if (param instanceof Integer) {
+    //                 psmt.setInt(i + 1, Integer.valueOf(param.toString()));
+    //             } else if (param instanceof Long) {
+    //                 psmt.setLong(i + 1, Long.valueOf(param.toString()));
+    //             }
+    //         }
 
-            rs = psmt.executeQuery();
+    //         rs = psmt.executeQuery();
 
-            if (rs == null)
-                return null;
+    //         if (rs == null)
+    //             return null;
 
-            ResultSetMetaData metaData = rs.getMetaData();
+    //         ResultSetMetaData metaData = rs.getMetaData();
 
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                metaList.add(StrUtil.getCamelCase(metaData.getColumnName(i)));
-            }
+    //         for (int i = 1; i <= metaData.getColumnCount(); i++) {
+    //             metaList.add(StrUtil.getCamelCase(metaData.getColumnName(i)));
+    //         }
 
-            while (rs.next()) {
-                Map<String, String> rsData = new HashMap<>();
-                for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                    if ("DATE".equals(metaData.getColumnTypeName(i))) {
-                        rsData.put(StrUtil.getCamelCase(metaData.getColumnName(i)),
-                                String.valueOf(rs.getDate(i).getTime()));
-                    } else {
-                        rsData.put(StrUtil.getCamelCase(metaData.getColumnName(i)),
-                                rs.getString(metaData.getColumnName(i)));
-                    }
-                }
-                resultDataList.add(rsData);
-            }
+    //         while (rs.next()) {
+    //             Map<String, String> rsData = new HashMap<>();
+    //             for (int i = 1; i <= metaData.getColumnCount(); i++) {
+    //                 if ("DATE".equals(metaData.getColumnTypeName(i))) {
+    //                     rsData.put(StrUtil.getCamelCase(metaData.getColumnName(i)),
+    //                             String.valueOf(rs.getDate(i).getTime()));
+    //                 } else {
+    //                     rsData.put(StrUtil.getCamelCase(metaData.getColumnName(i)),
+    //                             rs.getString(metaData.getColumnName(i)));
+    //                 }
+    //             }
+    //             resultDataList.add(rsData);
+    //         }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            if (rs != null)
-                try {
-                    rs.close();
-                } catch (Exception e) {
-                }
-            if (psmt != null)
-                try {
-                    psmt.close();
-                } catch (Exception e) {
-                }
-            if (conn != null)
-                try {
-                    conn.close();
-                } catch (Exception e) {
-                }
-        }
+    //     } catch (Exception ex) {
+    //         ex.printStackTrace();
+    //     } finally {
+    //         if (rs != null)
+    //             try {
+    //                 rs.close();
+    //             } catch (Exception e) {
+    //             }
+    //         if (psmt != null)
+    //             try {
+    //                 psmt.close();
+    //             } catch (Exception e) {
+    //             }
+    //         if (conn != null)
+    //             try {
+    //                 conn.close();
+    //             } catch (Exception e) {
+    //             }
+    //     }
 
-        return instance;
-    }
+    //     return instance;
+    // }
 
     public static Connection getConnection() {
         Connection conn = null;
