@@ -42,6 +42,7 @@ public class CommonServiceImpl implements CommonService {
                             .append(columnVO.getDefaults() == null ? "null" : columnVO.getDefaults()).append(",\n");
                 }
             }
+            sb.append("    className: '").append(tableName).append("VO',\n");
             sb.append("    outData: {},\n");
             sb.append("  }\n");
             sb.append("};\n\n");

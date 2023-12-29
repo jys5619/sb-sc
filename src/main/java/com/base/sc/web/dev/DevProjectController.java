@@ -20,6 +20,7 @@ import com.base.sc.biz.vo.dev.DevProjectVO;
 import com.base.sc.framework.annotation.JsonResolver;
 import com.base.sc.framework.db.QueryExecutor;
 import com.base.sc.framework.db.queryData.SelectQueryListResult;
+import com.base.sc.util.SysUtil;
 import com.base.sc.web.dev.service.DevProjectService;
 
 import jakarta.annotation.Resource;
@@ -33,17 +34,6 @@ public class DevProjectController {
     public @ResponseBody ResponseEntity<?> getDevMenuList() {
         try {
             Map<String, Object> result = devProjectService.getDevProject();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
-    }
-
-    @RequestMapping(value = "/javascript.js", method = RequestMethod.GET, produces = "application/text; charset=utf-8")
-    public @ResponseBody ResponseEntity<?> getJavascript() {
-        try {
-            String result = "alert(3);";
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();

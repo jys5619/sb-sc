@@ -7,6 +7,7 @@ import com.base.sc.biz.common.DateTimeField;
 
 public class ObjectRootVO {
     private String id;
+    private String className;
     private String modifier;
     private DateTimeField modified;
     private String creator;
@@ -23,6 +24,14 @@ public class ObjectRootVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setOutData(Map<String, Object> outData) {
+        this.outData = outData;
     }
 
     public String getModifier() {
@@ -83,5 +92,9 @@ public class ObjectRootVO {
 
     public Object getOutDataObjectValue(String key) {
         return outData.get(key);
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

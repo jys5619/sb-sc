@@ -1,5 +1,7 @@
 package com.base.sc.web.common;
 
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.base.sc.util.SysUtil;
 import com.base.sc.web.common.service.CommonService;
 
 import jakarta.annotation.Resource;
@@ -21,6 +24,11 @@ public class CommonController {
         try {
             String result = commonService.getScript();
             System.out.println(result);
+
+            Set<Class<?>> classList = SysUtil.findAllClasses("com.base.sc.biz.vo");
+            for (Class<?> clazz : classList) {
+                System.out.println(clazz.getName());
+            }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
