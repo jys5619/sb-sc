@@ -1,13 +1,21 @@
 package com.base.sc.biz.vo.root;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.base.sc.biz.common.DateTimeField;
 
 public class ObjectRootVO {
     private String id;
-	private String modifier;
-	private DateTimeField modified;
-	private String creator;
-	private DateTimeField created;
+    private String modifier;
+    private DateTimeField modified;
+    private String creator;
+    private DateTimeField created;
+    private Map<String, Object> outData;
+
+    public ObjectRootVO() {
+        outData = new HashMap<>();
+    }
 
     public String getId() {
         return id;
@@ -33,6 +41,10 @@ public class ObjectRootVO {
         this.modified = modified;
     }
 
+    public void setModified(long time) {
+        this.modified = new DateTimeField(time);
+    }
+
     public String getCreator() {
         return creator;
     }
@@ -48,5 +60,28 @@ public class ObjectRootVO {
     public void setCreated(DateTimeField created) {
         this.created = created;
     }
-    
+
+    public void setCreated(long time) {
+        this.created = new DateTimeField(time);
+    }
+
+    public void putOutData(String key, Object value) {
+        outData.put(key, value);
+    }
+
+    public Map<String, Object> getOutData() {
+        return outData;
+    }
+
+    public String getOutDataStringValue(String key) {
+        if (outData.get(key) == null) {
+            return "";
+        }
+
+        return outData.get(key).toString();
+    }
+
+    public Object getOutDataObjectValue(String key) {
+        return outData.get(key);
+    }
 }

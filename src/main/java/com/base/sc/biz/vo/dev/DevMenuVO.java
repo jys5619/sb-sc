@@ -1,41 +1,61 @@
 package com.base.sc.biz.vo.dev;
 
-public class DevMenuVO {
-    
-	private String id;
-	private String names;
-	private String korName;
-	private String menuPath;
-	private String comments;
-    public String getId() {
-        return id;
+import com.base.sc.biz.vo.root.ObjectRootVO;
+
+public class DevMenuVO extends ObjectRootVO {
+    private String level1;
+    private String level2;
+    private String level3;
+    private String level4;
+    private String menuType;
+    private String descriptions;
+
+    public String getLevel1() {
+        return level1;
     }
-    public void setId(String id) {
-        this.id = id;
+
+    public void setLevel1(String level1) {
+        this.level1 = level1;
     }
-    public String getNames() {
-        return names;
+
+    public String getLevel2() {
+        return level2;
     }
-    public void setNames(String names) {
-        this.names = names;
+
+    public void setLevel2(String level2) {
+        this.level2 = level2;
     }
-    public String getKorName() {
-        return korName;
+
+    public String getLevel3() {
+        return level3;
     }
-    public void setKorName(String korName) {
-        this.korName = korName;
+
+    public void setLevel3(String level3) {
+        this.level3 = level3;
     }
-    public String getMenuPath() {
-        return menuPath;
+
+    public String getLevel4() {
+        return level4;
     }
-    public void setMenuPath(String menuPath) {
-        this.menuPath = menuPath;
+
+    public void setLevel4(String level4) {
+        this.level4 = level4;
     }
-    public String getComments() {
-        return comments;
+
+    public String getMenuType() {
+        return menuType;
     }
-    public void setComments(String comments) {
-        this.comments = comments;
+
+    public void setMenuType(String menuType) {
+        this.menuType = menuType;
     }
-    
+
+    public String getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(String descriptions) {
+        this.descriptions = descriptions;
+    }
+
 }

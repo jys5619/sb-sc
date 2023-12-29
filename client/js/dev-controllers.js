@@ -7,6 +7,8 @@ devApp.controller("DevCtrl", function ($scope, $http) {
   $scope.loading = false;
 
   $scope.data = {};
+  $scope.data.devMenu = new DevMenuVO();
+  $scope.data.devProject = new DevProjectVO();
 
   $scope.errorCallback = response => {
     $scope.loading = false;

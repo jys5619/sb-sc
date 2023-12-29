@@ -1,129 +1,115 @@
 <html>
-  <head>
-    <title>조회</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="./css/style.css" />
-    <script type="text/javascript" src="./js/common.js"></script>
-    <script type="text/javascript" src="./js/http-util.js"></script>
-    <script type="text/javascript" src="./js/angular.min.js"></script>
-    <script type="text/javascript" src="./js/dev-controllers.js"></script>
-  </head>
 
-  <body>
-    <!-- wrapper -->
-    <div id="wrapper">
-      <div id="contents" ng-app="dev" ng-controller="DevCtrl" ng-init='target="project"'>
-        <!-- 조회 -->
-        <div class="row">
-          <div class="input">
-            <input
-              type="radio"
-              id="rdo_input_project"
-              name="rdo_input"
-              ng-model="target"
-              value="project"
-            /><label for="rdo_input_project" class="tab_radio">프로젝트</label>
-            <input
-              type="radio"
-              id="rdo_input_menu"
-              name="rdo_input"
-              ng-model="target"
-              value="menu"
-            /><label for="rdo_input_menu" class="tab_radio">메뉴</label>
-            <input
-              type="radio"
-              id="rdo_input_menu_event"
-              name="rdo_input"
-              ng-model="target"
-              value="menu_event"
-            /><label for="rdo_input_menu_event" class="tab_radio">메뉴업무</label>
-          </div>
-        </div>
-        <!-- // 조회 -->
+<head>
+  <title>조회</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <script type="text/javascript" src="./js/common.js"></script>
+  <script type="text/javascript" src="./js/http-util.js"></script>
+  <script type="text/javascript" src="./js/angular.min.js"></script>
+  <script type="text/javascript" src="./js/dev-controllers.js"></script>
+  <script type="text/javascript" src="http://localhost:8992/common/javascript.js"></script>
+</head>
 
-        <!-- prject -->
-        <div ng-show="target == 'project'">
-          <h2>Project</h2>
-          <div class="buttongroup">
-            <input type="button" value="조회" ng-click="searchDevProject()" />
-            <input type="button" value="저장" ng-click="saveDevProject(data)" />
-            <label ng-show="loading == true" style="font-weight: bold; color: darkblue"
-              >Loading...</label
-            >
-          </div>
-          <div class="form">
-            <div class="field">
-              <div class="label">ID</div>
-              <div class="input"><input type="text" ng-model="data.project.id" readonly /></div>
-            </div>
-            <div class="field">
-              <div class="label">프로젝트명</div>
-              <div class="input"><input type="text" ng-model="data.project.projectName" /></div>
-            </div>
-            <div class="field">
-              <div class="label">설명</div>
-              <div class="input">
-                <textarea ng-model="data.project.discriptions" rows="20"></textarea>
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">계획시작일</div>
-              <div class="input">
-                <input type="date" ng-model="data.project.planStartDate.date" />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">계획종료일</div>
-              <div class="input">
-                <input type="date" ng-model="data.project.planEndDate.date" />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">실제시작일</div>
-              <div class="input">
-                <input type="date" ng-model="data.project.realStartDate.date" />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">실제종료일</div>
-              <div class="input">
-                <input type="date" ng-model="data.project.realEndDate.date" />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">수정자</div>
-              <div class="input">
-                <input type="text" ng-model="data.project.modifier" readonly />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">수정일자</div>
-              <div class="input">
-                <input type="datetime-local" ng-model="data.project.modified.datetime" readonly />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">등록자</div>
-              <div class="input">
-                <input type="text" ng-model="data.project.creator" readonly />
-              </div>
-            </div>
-            <div class="field">
-              <div class="label">등록일자</div>
-              <div class="input">
-                <input type="datetime-local" ng-model="data.project.created.datetime" readonly />
-              </div>
-            </div>
-            <pre>{{ data | json }}</pre>
-          </div>
+<body>
+  <!-- wrapper -->
+  <div id="wrapper">
+    <div id="contents" ng-app="dev" ng-controller="DevCtrl" ng-init='target="project"'>
+      <!-- 조회 -->
+      <div class="row">
+        <div class="input">
+          <input type="radio" id="rdo_input_project" name="rdo_input" ng-model="target" value="project" /><label
+            for="rdo_input_project" class="tab_radio">프로젝트</label>
+          <input type="radio" id="rdo_input_menu" name="rdo_input" ng-model="target" value="menu" /><label
+            for="rdo_input_menu" class="tab_radio">메뉴</label>
+          <input type="radio" id="rdo_input_menu_event" name="rdo_input" ng-model="target" value="menu_event" /><label
+            for="rdo_input_menu_event" class="tab_radio">메뉴업무</label>
         </div>
-        <!-- // project -->
       </div>
+      <!-- // 조회 -->
 
-      <!-- footer -->
-      <div id="footer">Developer : JYS</div>
-      <!-- //footer -->
+      <!-- prject -->
+      <div ng-show="target == 'project'">
+        <h2>Project</h2>
+        <div class="buttongroup">
+          <input type="button" value="조회" ng-click="searchDevProject()" />
+          <input type="button" value="저장" ng-click="saveDevProject(data)" />
+          <label ng-show="loading == true" style="font-weight: bold; color: darkblue">Loading...</label>
+        </div>
+        <div class="form">
+          <div class="field">
+            <div class="label">ID</div>
+            <div class="input"><input type="text" ng-model="data.devProject.id" readonly /></div>
+          </div>
+          <div class="field">
+            <div class="label">프로젝트명</div>
+            <div class="input"><input type="text" ng-model="data.devProject.projectName" /></div>
+          </div>
+          <div class="field">
+            <div class="label">설명</div>
+            <div class="input">
+              <textarea ng-model="data.devProject.discriptions" rows="20"></textarea>
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">계획시작일</div>
+            <div class="input">
+              <input type="date" ng-model="data.devProject.planStartDate.date" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">계획종료일</div>
+            <div class="input">
+              <input type="date" ng-model="data.devProject.planEndDate.date" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">실제시작일</div>
+            <div class="input">
+              <input type="date" ng-model="data.devProject.realStartDate.date" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">실제종료일</div>
+            <div class="input">
+              <input type="date" ng-model="data.devProject.realEndDate.date" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">수정자</div>
+            <div class="input">
+              <input type="text" ng-model="data.devProject.modifier" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">수정일자</div>
+            <div class="input">
+              <input type="datetime-local" ng-model="data.devProject.modified.datetime" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">등록자</div>
+            <div class="input">
+              <input type="text" ng-model="data.devProject.creator" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">등록일자</div>
+            <div class="input">
+              <input type="datetime-local" ng-model="data.devProject.created.datetime" readonly />
+            </div>
+          </div>
+          <pre>{{ data | json }}</pre>
+        </div>
+      </div>
+      <!-- // project -->
     </div>
-    <!-- //wrapper -->
-  </body>
+
+    <!-- footer -->
+    <div id="footer">Developer : JYS</div>
+    <!-- //footer -->
+  </div>
+  <!-- //wrapper -->
+</body>
+
 </html>
