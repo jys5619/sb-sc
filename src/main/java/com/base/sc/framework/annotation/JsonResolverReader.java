@@ -9,8 +9,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -74,7 +72,7 @@ public class JsonResolverReader implements HandlerMethodArgumentResolver {
         if (isVariable(clazz)) {
             return getVariableValue(clazz, dataObject.get(key));
         } else if (List.class.isAssignableFrom(clazz)) {
-            List resultList = new ArrayList();
+            List<Object> resultList = new ArrayList<>();
             ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) dataObject.get(key);
             for (Map<String, Object> map : list) {
                 Object obj = getObjectValue(map, genericType, 1);
@@ -136,9 +134,9 @@ public class JsonResolverReader implements HandlerMethodArgumentResolver {
                 setFieldValue(voObject, voField, obj, true);
             } else if (isCollectionType(voField.getType())) {
                 if (voField.getGenericType() instanceof ParameterizedType) {
-                    Type genericType = voField.getGenericType();
+                    // Type genericType = voField.getGenericType();
                     ParameterizedType parameterizedType = (ParameterizedType) voField.getGenericType();
-                    Type rawType = parameterizedType.getRawType();
+                    // Type rawType = parameterizedType.getRawType();
                     Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                     Type nestedType = actualTypeArguments[actualTypeArguments.length - 1];
                     if (nestedType.getTypeName().equals(voObject.getClass().getTypeName())) {
@@ -147,7 +145,7 @@ public class JsonResolverReader implements HandlerMethodArgumentResolver {
                             if (depth > 2)
                                 continue;
                         }
-                        List resultList = new ArrayList();
+                        List<Object> resultList = new ArrayList<>();
                         ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) dataObject
                                 .get(voField.getName());
                         for (Map<String, Object> map : list) {
@@ -160,7 +158,7 @@ public class JsonResolverReader implements HandlerMethodArgumentResolver {
                         setFieldValue(voObject, voField, resultList, false);
                         continue;
                     } else {
-                        List resultList = new ArrayList();
+                        List<Object> resultList = new ArrayList<>();
                         ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) dataObject
                                 .get(voField.getName());
                         for (Map<String, Object> map : list) {

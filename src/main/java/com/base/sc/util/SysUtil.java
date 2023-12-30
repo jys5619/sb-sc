@@ -3,7 +3,9 @@ package com.base.sc.util;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,5 +52,15 @@ public class SysUtil {
             // handle the exception
         }
         return null;
+    }
+
+    public static Map<String, String> getClassList(String rootPackage) {
+        Set<Class<?>> classList = SysUtil.findAllClasses(rootPackage);
+        Map<String, String> packageMap = new HashMap<>();
+        for (Class<?> clazz : classList) {
+            packageMap.put(clazz.getSimpleName(), clazz.getName());
+        }
+
+        return packageMap;
     }
 }
