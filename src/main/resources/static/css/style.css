@@ -4,7 +4,7 @@
   box-sizing: border-box;
   color: #1e2022;
   /* font: 13px 'Gothiche', 'Gothiche', 고딕체, Gothiche, sans-serif; */
-  font: 14px "Gothic", "Gothic", 고딕, Gothic, sans-serif;
+  font: 12px "Gothic", "Gothic", 고딕, Gothic, sans-serif;
 }
 
 body,
@@ -33,16 +33,23 @@ a {
 
 select,
 input {
-  width: 100%;
-  border: 1px solid black;
-  height: 24px;
+  height: 22px;
+  font-size: 12px;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  height: 14px;
+  margin: 3px 0 0 0;
+  padding: 0px;
+
 }
 
 .container {
   display: grid;
   grid-template-columns: 300px auto;
   /* 메뉴 숨기기 : 300px auto; 0 auto */
-  grid-template-rows: 37px 28px auto;
+  grid-template-rows: 37px 24px auto;
   row-gap: 1px;
   background: black;
   /* padding: 10px; */
@@ -140,11 +147,11 @@ nav.menu input[type='radio']:checked+span {
 }
 
 nav.menu input[type='radio']:hover+span {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 nav.menu input[type='radio']:checked+span {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 /*  // 왼쪽 메뉴 - 아코디언 */
@@ -175,13 +182,11 @@ div.tabbar span.selected {
 }
 
 div.tabbar>span>span.close {
-  padding-left: 15px;
-  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 2px;
 }
 
 div.tabbar>span>span.close-empty {
-  padding-left: 0;
-  padding-right: 0;
   padding-right: 5px;
 }
 
@@ -211,50 +216,147 @@ main>div.content-main>.main-title {
   margin-bottom: 10px;
 }
 
-main>div.content-main>.main-title>h1 {
-  padding: 5px 16px;
-  font-size: 16px;
+
+/* form */
+.page {
+  min-width: 860px;
+  font-size: 12px;
 }
 
-
-/* // Main - Title */
+.page>.title {
+  padding: 0 3px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
 
 /* Main - Form */
-.main-form {
-  border: 1px solid #9e9e9e;
+.form {
   margin-bottom: 10px;
-  border-radius: 3px;
-  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 1px;
+  background: black;
 }
 
-form.col-4>.form-row {
+.form>.row>.col-8 {
   display: flex;
   gap: 1px;
-  border: 1px solid #9e9e9e;
+  background: black;
 }
 
-form.col-4>.form-row>div {
-  padding: 2px;
-}
-
-form.col-4>.form-row>div:nth-child(odd) {
-  flex-basis: 150px;
-  flex-grow: 0;
-  font-weight: 600;
-  padding: 4px 10px 0 10px;
+.form>.row>.col-8>div:nth-child(odd) {
+  background: #ddd;
+  flex: none;
+  flex-wrap: nowrap;
+  width: 120px;
   text-align: right;
+  padding: 3px 5px;
 }
 
-form.col-4>.form-row>div:nth-child(even) {
+.form>.row>.col-8>div:nth-child(even) {
   flex-grow: 1;
   flex-basis: 200px;
 }
 
-/* // Main - Form */
+.form>.row>.col-8>div:nth-child(even) select,
+.form>.row>.col-8>div:nth-child(even) input {
+  border-width: 0;
+  width: 100%;
+}
 
-.main-grid {
-  border: 1px solid #9e9e9e;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  padding: 5px;
+/* row group */
+
+.row-group {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin: 10px 0 0 0;
+}
+
+.row-group .left {
+  margin-right: auto;
+  vertical-align: bottom;
+}
+
+.row-group .left .title {
+  display: inline-block;
+  padding-top: 4px;
+}
+
+.row-group .center {
+  margin-right: auto;
+}
+
+.row-group .center .paging {
+  display: inline-block;
+  padding-top: 4px;
+}
+
+.row-group .center .paging>span {
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.row-group .center .paging>span:hover {
+  font-weight: bold;
+}
+
+.row-group .right {
+  margin-left: auto;
+  background: left;
+}
+
+/* button Group */
+
+.button-right input {
+  padding: 2px 8px 4px 8px;
+  border: 1px solid black;
+  margin-left: 3px;
+  height: 23px;
+  background-color: white;
+  color: black;
+}
+
+.button-right input:active {
+  background-color: #ccc;
+}
+
+.table {
+  margin-top: 5px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th {
+  border: 1px solid black;
+  background-color: #ddd;
+  height: 23px;
+}
+
+.table td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.table td select,
+.table td input {
+  border-width: 0;
+  width: 100%;
+}
+
+.table td span {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0 3px;
+}
+
+.table td span.center {
+  text-align: center;
+}
+
+.table td span.right {
+  text-align: right;
 }

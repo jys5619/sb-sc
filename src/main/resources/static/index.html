@@ -5,59 +5,15 @@
   <title>Project Manager</title>
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <script type="text/javascript" src="/js/angular.min.js"></script>
-  <script type="text/javascript" src="/js/ng-app.js"></script>
-  <script type="text/javascript" src="/js/main-controller.js"></script>
+  <script type="text/javascript" src="/js/store.js"></script>
+  <script type="text/javascript" src="/root.js"></script>
+  <script type="text/javascript" src="/dev/project/dev-project.js"></script>
+  <script type="text/javascript" src="/js/controller.js"></script>
 </head>
 
 <body ng-app="ng-app">
-  <div class="container" ng-controller="main-controller as mainCtrl">
-    <!-- 대메뉴 -->
-    <div class="logo">
-      <div>
-        <a href="/index.html">HOME</a>
-        <a href="javascript:void(0)" style="float:right;" ng-click="mainCtrl.toggleSubMenu()">
-          {{ mainCtrl.showSubMenu ?"◀" : "▶"}}</a>
-      </div>
-    </div>
-    <header>
-      <div class="top-menu">
-        <div ng-repeat="mainMenu in mainCtrl.mainMenuList">
-          <a href="javascript:void(0)" ng-class="{selected: mainCtrl.currentMainMenu.id === mainMenu.id}"
-            ng-click="mainCtrl.selectMainMenu(mainMenu)">
-            {{ mainMenu.title }}
-          </a>
-        </div>
-      </div>
-    </header>
-    <!-- // 대메뉴 -->
-    <!-- 소메뉴 -->
-    <nav class="menu" ng-show="mainCtrl.showSubMenu" ng-style="{'grid-column-end': mainCtrl.showSubMenu ? 2 : 1}">
-      <label ng-repeat="subMenu in mainCtrl.currentMainMenu.menu" for="{{subMenu.id}}"
-        ng-click="mainCtrl.appendActiveMenu(subMenu)">
-        <input type="radio" name="left-menu-sub" id="{{subMenu.id}}" />
-        <span>{{subMenu.title}}</span>
-      </label>
-    </nav>
-    <!-- // 소메뉴 -->
-    <!-- 실행화면탭 -->
-    <div class="tabbar" ng-style="{'grid-column-start': mainCtrl.showSubMenu ? 2 : 1}">
-      <span ng-repeat="activeMenu in mainCtrl.activeMenuList">
-        <span ng-class="{selected: mainCtrl.currentActiveMenu.id === activeMenu.id}"
-          ng-click="mainCtrl.setActiveMenu(activeMenu)">{{activeMenu.title}}</span>
-        <span class="close" ng-click="mainCtrl.removeActiveMenu(activeMenu)" ng-hide="activeMenu.id === 'main'">x</span>
-        <span class="close-empty" ng-show="activeMenu.id === 'main'"></span>
-      </span>
-    </div>
-    <!-- // 실행화면탭 -->
-    <section class="content" ng-style="{'grid-column-start': mainCtrl.showSubMenu ? 2 : 1}">
-      <main>
-        <div class="content-main">
-          <div ng-repeat="activeMenu in mainCtrl.activeMenuList"
-            ng-show="mainCtrl.currentActiveMenu.id === activeMenu.id" ng-include="activeMenu.url"></div>
-        </div>
-      </main>
-    </section>
-  </div>
+
+  <root></root>
 </body>
 
 </html>

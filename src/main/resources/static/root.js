@@ -1,7 +1,5 @@
-function mainController($sce) {
-    let mainCtrl = this;
-
-    mainCtrl.mainMenuList = [
+function ngRoot($scope, $window, $rootScope) {
+    this.mainMenuList = [
         {
             id: "main",
             title: "메인메뉴",
@@ -71,53 +69,53 @@ function mainController($sce) {
         },
     ];
 
-    mainCtrl.activeMenuList = mainCtrl.mainMenuList.filter(m => m.id === 'main');
-    mainCtrl.mainMenuList = mainCtrl.mainMenuList.filter(m => m.id !== 'main');
-    mainCtrl.currentActiveMenu = mainCtrl.activeMenuList[0];
-    mainCtrl.currentMainMenu = mainCtrl.mainMenuList[0]
-    mainCtrl.showSubMenu = true;
+    this.activeMenuList = this.mainMenuList.filter(m => m.id === 'main');
+    this.mainMenuList = this.mainMenuList.filter(m => m.id !== 'main');
+    this.currentActiveMenu = this.activeMenuList[0];
+    this.currentMainMenu = this.mainMenuList[0]
+    this.showSubMenu = true;
 
-    mainCtrl.selectMainMenu = (menu) => {
-        mainCtrl.currentMainMenu = menu;
+    this.selectMainMenu = (menu) => {
+        this.currentMainMenu = menu;
         if (!menu.menu || menu.menu.length === 0) {
             this.appendActiveMenu(menu);
         }
     }
 
-    mainCtrl.isCurrentMainMenu = (menu) => {
-        return mainCtrl.currentMainMenu?.id === menu.id;
+    this.isCurrentMainMenu = (menu) => {
+        return this.currentMainMenu?.id === menu.id;
     };
 
-    mainCtrl.appendActiveMenu = (menu) => {
-        const findMenu = mainCtrl.activeMenuList.find(m => m.id === menu.id);
+    this.appendActiveMenu = (menu) => {
+        const findMenu = this.activeMenuList.find(m => m.id === menu.id);
         if (!findMenu) {
             if (!menu.url) {
                 alert("등록할 수 없는 메뉴 입니다.");
                 return;
             }
 
-            mainCtrl.activeMenuList.push(menu);
-            mainCtrl.setActiveMenu(menu);
+            this.activeMenuList.push(menu);
+            this.setActiveMenu(menu);
         } else {
-            mainCtrl.setActiveMenu(findMenu);
+            this.setActiveMenu(findMenu);
         }
     }
 
-    mainCtrl.removeActiveMenu = (menu) => {
-        if (menu.id === mainCtrl.currentActiveMenu.id) {
-            const findIndex = mainCtrl.activeMenuList.findIndex(m => m.id === menu.id);
-            mainCtrl.activeMenuList = mainCtrl.activeMenuList.filter(m => m.id !== menu.id);
-            mainCtrl.setActiveMenu(mainCtrl.activeMenuList[findIndex - 1]);
+    this.removeActiveMenu = (menu) => {
+        if (menu.id === this.currentActiveMenu.id) {
+            const findIndex = this.activeMenuList.findIndex(m => m.id === menu.id);
+            this.activeMenuList = this.activeMenuList.filter(m => m.id !== menu.id);
+            this.setActiveMenu(this.activeMenuList[findIndex - 1]);
         } else {
-            mainCtrl.activeMenuList = mainCtrl.activeMenuList.filter(m => m.id !== menu.id);
+            this.activeMenuList = this.activeMenuList.filter(m => m.id !== menu.id);
         }
     }
 
-    mainCtrl.setActiveMenu = (menu) => {
-        mainCtrl.currentActiveMenu = menu;
+    this.setActiveMenu = (menu) => {
+        this.currentActiveMenu = menu;
     }
 
-    mainCtrl.toggleSubMenu = () => {
-        mainCtrl.showSubMenu = !mainCtrl.showSubMenu;
+    this.toggleSubMenu = () => {
+        this.showSubMenu = !this.showSubMenu;
     };
 }

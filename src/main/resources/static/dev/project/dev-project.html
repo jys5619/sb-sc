@@ -1,6 +1,6 @@
 <div class="page">
   <div class="title">
-    제목
+    TITLE[{{$ctrl.title}}] - {{ $ctrl.name }}
   </div>
   <form class="form">
     <div class="row">
@@ -77,13 +77,12 @@
         <col />
       </colgroup>
       <tr>
-        <th><input type="checkbox" ng-model="processer.table.target.allchecked"
-            ng-click="toggleAllCheck(processer.table.target.allchecked, processer.table.target.columns)" checked></th>
+        <th><input type="checkbox" checked></th>
         <th>컬럼명</th>
         <th>한글명</th>
         <th>한글명</th>
       </tr>
-      <tr ng-repeat="column in mainCtrl.mainMenuList">
+      <tr>
         <td><input type="checkbox"></td>
         <td><span class="center" ng-bind="column.id"></span></td>
         <td><span class="right" ng-bind="column.title"></span></td>
