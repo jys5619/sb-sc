@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.h2.command.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.base.sc.biz.vo.dev.DevMenuVO;
 import com.base.sc.biz.vo.dev.DevProjectVO;
 import com.base.sc.framework.annotation.JsonResolver;
-import com.base.sc.framework.db.QueryExecutor;
-import com.base.sc.framework.db.queryData.SelectQueryListResult;
-import com.base.sc.util.SysUtil;
 import com.base.sc.web.dev.service.DevProjectService;
 
 import jakarta.annotation.Resource;
@@ -30,10 +29,10 @@ public class DevProjectController {
     @Resource(name = "devProjectService")
     private DevProjectService devProjectService;
 
-    @RequestMapping(value = "/dev/project", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-    public @ResponseBody ResponseEntity<?> getDevMenuList() {
+    @RequestMapping(value = "/dev/project/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public @ResponseBody ResponseEntity<?> getDevProject(@PathVariable("id") String id) {
         try {
-            Map<String, Object> result = devProjectService.getDevProject();
+            DevProjectVO result = devProjectService.getDevProject(id);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -41,37 +40,21 @@ public class DevProjectController {
         }
     }
 
-    @RequestMapping(value = "/dev/project", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public @ResponseBody ResponseEntity<?> saveDevMenuList(
-            @JsonResolver(name = "project") DevProjectVO devProjectVO) {
+    @RequestMapping(value = "/dev/project/list", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public @ResponseBody ResponseEntity<?> getDevProjectList(@RequestBody Map<String, Object> params) {
         try {
-            // String sql = "SELECT *\n" +
-            // " FROM DEV_MENU\n" +
-            // " WHERE MENU_LEVEL_1 = ::menuLevel1\n" +
-            // " AND MENU_LEVEL_2 = ::menuLevel2\n";
+            List<DevProjectVO> result = devProjectService.getDevProjectList(params);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
 
-            // SelectQueryInfo queryInfo = new SelectQueryInfo(sql);
-
-            // Map<String, Object> params = new HashMap<>();
-            // params.put("menuLevel1", "LV1");
-            // params.put("menuLevel2", "LV2");
-            // List<DevMenuVO> devMenuList = queryInfo.selectList(params, DevMenuVO.class);
-
-            DevMenuVO devMenuVO = new DevMenuVO();
-            devMenuVO.setId("6022b95bUf0cdU40c9U891cU3d285d44e933");
-            // devMenuVO.setModified(new DateTimeField(new Date()));
-            // devMenuVO.setLevel1("LV11");
-            // devMenuVO.setLevel2("LV22");
-            // devMenuVO.setLevel3("LV33");
-            // devMenuVO.setLevel4("LV44");
-            // devMenuVO.setMenuType("TP");
-            // devMenuVO.setDescriptions("DESC...");
-
-            // int i = QueryExecutor.save(devMenuVO);
-            SelectQueryListResult resultData = QueryExecutor.selectList(devMenuVO);
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("devMenu", resultData);
+    @RequestMapping(value = "/dev/project", method = RequestMethod.PUT, produces = "application/json; charset=utf-8")
+    public @ResponseBody ResponseEntity<?> saveDevProject(@JsonResolver(name = "project") DevProjectVO devProjectVO) {
+        try {
+            int result = devProjectService.saveDevProject(devProjectVO);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -1,0 +1,119 @@
+<div class="page">
+  <div class="title">
+    {{$ctrl.title}}
+  </div>
+  <form class="form">
+    <div class="row">
+      <div class="col-8">
+        <div>프로젝트명</div>
+        <div><input type="text" ng-model="search.id" /></div>
+        <div>계획일자</div>
+        <div>
+          <input type="date" ng-model="search.planStartDate" />
+          <span>~</span>
+          <input type="date" ng-model="search.planEndDate" />
+        </div>
+        <div>실행일자</div>
+        <div>
+          <div class="date-group" style="display:flex;gap:1px;">
+            <span>
+              <select>
+                <option value="EQ">=</option>
+                <option value="GT">&gt;</option>
+                <option value="EG">≥</option>
+                <option value="LT">&lt;</option>
+                <option value="EL">≤</option>
+                <option value="BT">~</option>
+              </select>
+            </span>
+            <input type="date" ng-model="search.realStartDate" />
+            <input type="date" ng-model="search.realEndDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row-group">
+    <div class="right">
+      <input type="button" value="조회" />
+    </div>
+  </div>
+  <hr style="border-width: 0;" />
+  <div>
+    <div class="row-group">
+      <div class="left">
+        <span class="title">조회 목록</span>
+      </div>
+      <div class="right">
+        <input type="button" value="삭제" />
+        <input type="button" value="등록" />
+      </div>
+    </div>
+
+    <table class="table">
+      <colgroup>
+        <col width="23" />
+        <col width="180" />
+        <col width="90" />
+        <col width="90" />
+        <col width="90" />
+        <col width="90" />
+        <col />
+      </colgroup>
+      <tr>
+        <th><input type="checkbox" checked></th>
+        <th>프로젝트명</th>
+        <th>계획시작일자</th>
+        <th>계획종료일자</th>
+        <th>실행시작일자</th>
+        <th>실행종료일자</th>
+      </tr>
+      <tr ng-repeat="row in list track by row.id">
+        <td><input type="checkbox"></td>
+        <td>
+          <span>
+            <a href="$ctrl.detail(row.id)">{{ row.projectName }}</a>
+          </span>
+        </td>
+        <td><span class="center" ng-bind="row.planStartDate"></span></td>
+        <td><span class="center" ng-bind="row.planEndDate"></span></td>
+        <td><span class="center" ng-bind="row.realStartDate"></span></td>
+        <td><span class="center" ng-bind="row.realEndDate"></span></td>
+      </tr>
+    </table>
+
+    <div class="row-group">
+      <div class="left">
+        <select>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+      <div class="center">
+        <div class="paging">
+          <span>◀◀</span>
+          <span>◀</span>
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+          <span>6</span>
+          <span>7</span>
+          <span>8</span>
+          <span>9</span>
+          <span>10</span>
+          <span>▶</span>
+          <span>▶▶</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

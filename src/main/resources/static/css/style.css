@@ -37,12 +37,11 @@ input {
   font-size: 12px;
 }
 
-input[type='checkbox'],
-input[type='radio'] {
+input[type="checkbox"],
+input[type="radio"] {
   height: 14px;
   margin: 3px 0 0 0;
   padding: 0px;
-
 }
 
 .container {
@@ -56,7 +55,6 @@ input[type='radio'] {
   height: 100vh;
 }
 
-
 div.logo {
   grid-column-start: 1;
   grid-column-end: 2;
@@ -68,7 +66,6 @@ div.logo a {
   font-weight: normal;
   font-size: 16px;
 }
-
 
 /* 헤더 */
 header {
@@ -140,17 +137,17 @@ nav.menu label {
   position: relative;
 }
 
-nav.menu input[type='radio']:checked+span {
+nav.menu input[type="radio"]:checked + span {
   display: block;
   cursor: pointer;
   position: relative;
 }
 
-nav.menu input[type='radio']:hover+span {
+nav.menu input[type="radio"]:hover + span {
   font-weight: normal;
 }
 
-nav.menu input[type='radio']:checked+span {
+nav.menu input[type="radio"]:checked + span {
   font-weight: normal;
 }
 
@@ -167,7 +164,7 @@ div.tabbar {
   overflow: hidden;
 }
 
-div.tabbar>span {
+div.tabbar > span {
   font-size: 12px;
   padding: 5px 10px;
   border-right: 1px solid black;
@@ -181,12 +178,12 @@ div.tabbar span.selected {
   font-weight: bold;
 }
 
-div.tabbar>span>span.close {
+div.tabbar > span > span.close {
   padding-left: 5px;
   padding-bottom: 2px;
 }
 
-div.tabbar>span>span.close-empty {
+div.tabbar > span > span.close-empty {
   padding-right: 5px;
 }
 
@@ -197,25 +194,14 @@ section {
   grid-column-end: 3;
   display: flex;
   background: white;
+  padding: 10px;
 }
 
 /* Main */
 main {
   flex: 1 0 100%;
-  display: flex;
   overflow-y: auto;
 }
-
-main>div.content-main {
-  padding: 10px;
-  flex: 1 0 60%;
-}
-
-/* Main - Title */
-main>div.content-main>.main-title {
-  margin-bottom: 10px;
-}
-
 
 /* form */
 .page {
@@ -223,7 +209,7 @@ main>div.content-main>.main-title {
   font-size: 12px;
 }
 
-.page>.title {
+.page > .title {
   padding: 0 3px;
   margin-bottom: 10px;
   font-size: 20px;
@@ -239,13 +225,13 @@ main>div.content-main>.main-title {
   background: black;
 }
 
-.form>.row>.col-8 {
+.form > .row > .col-8 {
   display: flex;
   gap: 1px;
   background: black;
 }
 
-.form>.row>.col-8>div:nth-child(odd) {
+.form > .row > .col-8 > div:nth-child(odd) {
   background: #ddd;
   flex: none;
   flex-wrap: nowrap;
@@ -254,13 +240,13 @@ main>div.content-main>.main-title {
   padding: 3px 5px;
 }
 
-.form>.row>.col-8>div:nth-child(even) {
+.form > .row > .col-8 > div:nth-child(even) {
   flex-grow: 1;
   flex-basis: 200px;
 }
 
-.form>.row>.col-8>div:nth-child(even) select,
-.form>.row>.col-8>div:nth-child(even) input {
+.form > .row > .col-8 > div:nth-child(even) select,
+.form > .row > .col-8 > div:nth-child(even) input {
   border-width: 0;
   width: 100%;
 }
@@ -293,12 +279,12 @@ main>div.content-main>.main-title {
   padding-top: 4px;
 }
 
-.row-group .center .paging>span {
+.row-group .center .paging > span {
   padding: 0 5px;
   cursor: pointer;
 }
 
-.row-group .center .paging>span:hover {
+.row-group .center .paging > span:hover {
   font-weight: bold;
 }
 
