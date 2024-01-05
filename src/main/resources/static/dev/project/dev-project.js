@@ -1,4 +1,4 @@
-function ngDevProject() {
+const ngDevProject = () => {
   this.title;
   this.target = "list";
   this.search = {};
@@ -6,5 +6,4 @@ function ngDevProject() {
   this.detail = id => {
     this.target = "detail";
   };
-  //this.name = store().getData().user.name;
-}
+};
