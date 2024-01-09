@@ -16,7 +16,7 @@ public class CommonController {
     @Resource(name = "commonService")
     private CommonService commonService;
 
-    @RequestMapping(value = "/common/javascript.js", method = RequestMethod.GET, produces = "application/text; charset=utf-8")
+    @RequestMapping(value = "/api/common/javascript.js", method = RequestMethod.GET, produces = "application/text; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getJavascript() {
         try {
             String result = commonService.getScript();

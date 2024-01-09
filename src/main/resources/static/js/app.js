@@ -1,1 +1,1 @@
-const ngApp = angular.module('ng-app', []);
+const ngApp = angular.module("ng-app", []);

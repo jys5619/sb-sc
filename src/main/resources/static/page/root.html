@@ -49,10 +49,10 @@
       <span
         class="close"
         ng-click="$ctrl.removeActiveMenu(activeMenu)"
-        ng-hide="activeMenu.id === 'main'"
+        ng-hide="activeMenu.id === 'home'"
         >✕</span
       >
-      <span class="close-empty" ng-show="activeMenu.id === 'main'"></span>
+      <span class="close-empty" ng-show="activeMenu.id === 'home'"></span>
     </span>
   </div>
   <!-- // 실행화면탭 -->
@@ -60,17 +60,15 @@
     <main>
       <div ng-repeat="(index, activeMenu) in $ctrl.activeMenuList">
         <ng-template ng-switch="activeMenu.id">
-          <main-page
-            ng-switch-when="main"
-            ng-ref="$ctrl.activeMenuList[index].ctrl"
+          <home
+            ng-switch-when="home"
             ng-show="$ctrl.currentActiveMenu.id == activeMenu.id"
-            title="'TTT111'"
-          ></main-page>
+            subject="activeMenu.title"
+          ></home>
           <dev-project
             ng-switch-when="devProject"
-            ng-ref="$ctrl.activeMenuList[index].ctrl"
             ng-show="$ctrl.currentActiveMenu.id == activeMenu.id"
-            title="'SSS222'"
+            subject="activeMenu.title"
           ></dev-project>
           <div ng-switch-default ng-ref="$ctrl.activeMenuList[index].ctrl"></div>
         </ng-template>

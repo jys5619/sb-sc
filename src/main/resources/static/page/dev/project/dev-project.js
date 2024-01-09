@@ -1,5 +1,4 @@
 const ngDevProject = () => {
-  this.title;
   this.target = "list";
   this.search = {};
   this.list = [];
@@ -7,3 +6,9 @@ const ngDevProject = () => {
     this.target = "detail";
   };
 };
+
+ngApp.component("devProject", {
+  bindings: { subject: "<" },
+  templateUrl: "/page/dev/project/dev-project.html",
+  controller: ngDevProject,
+});

@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="title">
+    {{$ctrl.subject}} 정보
+  </div>
+  <form class="form">
+    <div class="row">
+      <div class="col">
+        <div>프로젝트명</div>
+        <div><input type="text" ng-model="search.id" /></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div>계획일자</div>
+        <div>
+          <div>
+            <input type="date" ng-model="search.planEndDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div>계획일자</div>
+        <div>
+          <div>
+            <input type="date" ng-model="search.realEndDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div>실행일자</div>
+        <div>
+          <div class="calendar-group">
+            <input type="date" ng-model="search.realStartDate" />
+            <span>~</span>
+            <input type="date" ng-model="search.realEndDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+</div>

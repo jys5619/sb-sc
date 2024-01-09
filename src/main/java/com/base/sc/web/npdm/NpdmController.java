@@ -19,7 +19,7 @@ public class NpdmController {
     @Resource(name = "tableDataService")
     private NpdmService tableDataService;
     
-    @RequestMapping(value="/table/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
+    @RequestMapping(value="/api/table/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getTableInfo(@PathVariable("keyword") String keyword) {
         try {
             Map<String, Object> result = tableDataService.searchTableInfo(keyword);
@@ -30,7 +30,7 @@ public class NpdmController {
         }
     }
 
-    @RequestMapping(value="/column/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
+    @RequestMapping(value="/api/column/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getColumnInfo(@PathVariable("keyword") String keyword) {
         try {
             Map<String, Object> result = tableDataService.searchColumnInfo(keyword);
@@ -41,7 +41,7 @@ public class NpdmController {
         }
     }
 
-    @RequestMapping(value="/dom/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
+    @RequestMapping(value="/api/dom/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getDomInfo(@PathVariable("keyword") String keyword) {
         try {
             Map<String, Object> result = tableDataService.searchDomInfo(keyword);
@@ -52,7 +52,7 @@ public class NpdmController {
         }
     }
 
-    @RequestMapping(value="/menu/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
+    @RequestMapping(value="/api/menu/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getMenuInfo(@PathVariable("keyword") String keyword) {
         try {
             Map<String, Object> result = tableDataService.searchMenuInfo(keyword);
@@ -63,7 +63,7 @@ public class NpdmController {
         }
     }
 
-    @RequestMapping(value="/organization/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
+    @RequestMapping(value="/api/organization/{keyword}", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public @ResponseBody ResponseEntity<?> getOrganizationInfo(@PathVariable("keyword") String keyword) {
         try {
             Map<String, Object> result = tableDataService.searchOrganizationInfo(keyword);

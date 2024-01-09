@@ -215,6 +215,54 @@ main {
   font-size: 20px;
 }
 
+/* Main - Search Form */
+.search-form {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 1px;
+  background: black;
+}
+
+.search-form > .row > .col {
+  display: flex;
+  gap: 1px;
+  background: black;
+}
+
+.search-form > .row > .col > div:nth-child(odd) {
+  background: #ddd;
+  flex: none;
+  flex-wrap: nowrap;
+  width: 120px;
+  text-align: right;
+  padding: 3px 5px;
+}
+
+.search-form > .row > .col > div:nth-child(even) {
+  flex-grow: 1;
+  flex-basis: 200px;
+}
+
+.search-form > .row > .col > div:nth-child(even) select,
+.search-form > .row > .col > div:nth-child(even) input {
+  border-width: 0;
+  width: 100%;
+}
+
+.search-form .calendar-group {
+  display: flex;
+  gap: 1px;
+}
+
+.search-form .calendar-group > span {
+  background: white;
+  padding-top: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
 /* Main - Form */
 .form {
   margin-bottom: 10px;
@@ -225,30 +273,37 @@ main {
   background: black;
 }
 
-.form > .row > .col-8 {
+.form > .row > .col {
   display: flex;
   gap: 1px;
-  background: black;
 }
 
-.form > .row > .col-8 > div:nth-child(odd) {
+.form > .row > .col > div:nth-child(odd) {
   background: #ddd;
   flex: none;
   flex-wrap: nowrap;
   width: 120px;
   text-align: right;
-  padding: 3px 5px;
+  padding: 6px 5px;
 }
 
-.form > .row > .col-8 > div:nth-child(even) {
+.form > .row > .col > div:nth-child(even) {
   flex-grow: 1;
   flex-basis: 200px;
+  background: white;
+  padding: 3px;
 }
 
-.form > .row > .col-8 > div:nth-child(even) select,
-.form > .row > .col-8 > div:nth-child(even) input {
-  border-width: 0;
-  width: 100%;
+.form .calendar-group {
+  display: flex;
+  gap: 1px;
+}
+
+.form .calendar-group > span {
+  background: white;
+  padding-top: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 /* row group */
